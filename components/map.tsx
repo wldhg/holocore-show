@@ -142,6 +142,12 @@ const Map = function Map() {
           style={{ width: '100%', height: '100%' }}
         >
           <LayersControl position="topright">
+            <LayersControl.BaseLayer name="Map: Default">
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+              />
+            </LayersControl.BaseLayer>
             <LayersControl.BaseLayer checked={colorMode === 'dark'} name="Map: Dark">
               <TileLayer
                 attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
