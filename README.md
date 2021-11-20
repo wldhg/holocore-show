@@ -5,6 +5,7 @@ This repository implements RAN state viewer for HOLOCORE demonstration.
 
 You can configure below environment variables to this program.
 
+- `NEXT_PUBLIC_UPDATE_INTERVAL` : Data update interval in miliseconds. (default: `1000` = 1 seconds)
 - `NEXT_PUBLIC_API_ENDPOINT` : Roadshow endpoint. (ex: `127.0.0.1:3324`)
 - `NEXT_PUBLIC_API_TYPE` : RAN connection type. (`SDRAN` (default) or `RAN2`) \
     <sup>Note: currrently only SDRAN is supported.</sup>
@@ -20,14 +21,5 @@ You can configure below environment variables to this program.
 $ yarn
 $ NEXT_PUBLIC_API_ENDPOINT="hakos.holocore.space:3324" yarn dev
 ```
-
----
-
-### To Do
-
-- [ ] Displaying state information as text
-- [ ] Displaying association or RSRP with line
-
----
 
 &copy; Jio Gim.

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  MapContainer, TileLayer, Circle, LayerGroup, LayersControl, Marker,
+  MapContainer, TileLayer, Circle, LayerGroup, LayersControl, Marker, Tooltip, Polyline,
 } from 'react-leaflet';
 import { LatLngTuple, Map as LeafletMap } from 'leaflet';
 import type StatReport from 'sr2rs';
@@ -23,6 +23,7 @@ const Map = function Map() {
   const [uePositions, setUEPositions] = useState<(typeof Marker)[]>([]);
   const [cellCenters, setCellCenters] = useState<(typeof Marker)[]>([]);
   const [cellRanges, setCellRanges] = useState<(typeof Circle)[]>([]);
+  const [assocLines, setAssocLines] = useState<(typeof Polyline)[]>([]);
   const [floatingState] = useState<{
     map: LeafletMap | null;
     mapFlied: boolean;
@@ -57,6 +58,7 @@ const Map = function Map() {
         const upc = []; // ue position candidates
         const ccc = []; // cell center candidates
         const crc = []; // cell range candidates
+        const alc = []; // association line candidates
 
         report.cellReports.forEach((cr) => {
           // Cell center
@@ -65,7 +67,17 @@ const Map = function Map() {
               key={`ccc-${cr.NCGI}`}
               icon={CellCenterIcon}
               position={[cr.latitude, cr.longitude]}
-            />,
+            >
+              <Tooltip permanent opacity={0.7} direction="bottom">
+                <b>{`[${cr.NCGI}]`}</b>
+                &nbsp;(TX:&nbsp;
+                <span>{cr.txPowerDB}</span>
+                )
+                <br />
+                <span>Load&nbsp;:&nbsp;</span>
+                <span>{cr.load}</span>
+              </Tooltip>
+            </Marker>,
           );
           cellCenter[0] += cr.latitude;
           cellCenter[1] += cr.longitude;
@@ -79,7 +91,7 @@ const Map = function Map() {
               radius={range}
               pathOptions={{
                 fillColor: '#f00',
-                fillOpacity: 0.05,
+                fillOpacity: 0.1,
                 color: '#f00',
               }}
               stroke
@@ -88,12 +100,70 @@ const Map = function Map() {
         });
 
         report.UEReports.forEach((ur) => {
+          // RSRP information calculation
+          let currentRSRP = 0;
+          let isCurrentRSRPMax = false;
+          let highestRSRP = 0;
+          let highestNCGI = 0;
+          for (const uecr of ur.UECellReports) {
+            if (uecr.NCGI === ur.associatedNCGI) {
+              currentRSRP = uecr.RSRP;
+            }
+            if (uecr.RSRP > highestRSRP) {
+              highestRSRP = uecr.RSRP;
+              highestNCGI = uecr.NCGI;
+            }
+          }
+          if (Math.abs(currentRSRP - highestRSRP) < 1.1) {
+            isCurrentRSRPMax = true;
+          }
+
           // UE position
           upc.push(
             <Marker
               key={`upc-${ur.IMSI}`}
               icon={CellPhoneIcon}
               position={[ur.latitude, ur.longitude]}
+            >
+              <Tooltip opacity={0.7} direction="bottom">
+                <b>{`[${ur.IMSI}]`}</b>
+                <br />
+                <span>Connected to&nbsp;:&nbsp;</span>
+                <span>{ur.associatedNCGI}</span>
+                &nbsp;(
+                <span>{currentRSRP}</span>
+                {isCurrentRSRPMax ? ' ← MAX' : ''}
+                )
+                {
+                  !isCurrentRSRPMax ? (
+                    <>
+                      <br />
+                      <span>Highest&nbsp;RSRP&nbsp;:&nbsp;</span>
+                      <span>{highestNCGI}</span>
+                      &nbsp;(
+                      <span>{highestRSRP}</span>
+                    </>
+                  ) : null
+                }
+              </Tooltip>
+            </Marker>,
+          );
+
+          // Association line
+          alc.push(
+            <Polyline
+              key={`alc-${ur.IMSI}`}
+              positions={[
+                [ur.latitude, ur.longitude],
+                [
+                  report.cellReports.find((cr) => cr.NCGI === ur.associatedNCGI).latitude,
+                  report.cellReports.find((cr) => cr.NCGI === ur.associatedNCGI).longitude,
+                ],
+              ]}
+              color="green"
+              weight={2}
+              opacity={0.5}
+              smoothFactor={1}
             />,
           );
         });
@@ -122,13 +192,32 @@ const Map = function Map() {
               autoClose: 10000,
             },
           );
+          toast.info(
+            <div>
+              <b>Initial&nbsp;Statistics</b>
+              <br />
+              <span>
+                UE&nbsp;×&nbsp;
+                {report.UEReports.length}
+              </span>
+              &nbsp;/&nbsp;
+              <span>
+                Cell&nbsp;×&nbsp;
+                {report.cellReports.length}
+              </span>
+            </div>,
+            {
+              autoClose: 10000,
+            },
+          );
         }
 
         setCellCenters(ccc);
         setCellRanges(crc);
         setUEPositions(upc);
+        setAssocLines(alc);
       });
-    }, 1000);
+    }, Number.parseInt(process.env.NEXT_PUBLIC_UPDATE_INTERVAL, 10) || 1000);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -160,6 +249,11 @@ const Map = function Map() {
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
               />
             </LayersControl.BaseLayer>
+            <LayersControl.Overlay checked name="Association lines">
+              <LayerGroup>
+                {assocLines}
+              </LayerGroup>
+            </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Cell ranges">
               <LayerGroup>
                 {cellRanges}
