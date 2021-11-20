@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "allowJs": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "paths": {
+      "*": [
+        "*",
+        "components/*"
+      ]
+    },
+    "allowSyntheticDefaultImports": true,
+    "keyofStringsOnly": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "incremental": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "extensions.d.ts",
+    "proto/sr2rs.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "pages/api/sr2rs.js"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

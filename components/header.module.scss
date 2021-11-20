@@ -1,0 +1,49 @@
+@use "sass:math";
+
+.header {
+  width: 100vw;
+  height: 60px;
+  padding: 12px 20px;
+  box-sizing: border-box;
+  background-color: rgba(80, 80, 80, 0.2);
+  display: flex;
+  justify-content: space-between;
+
+  .logobox {
+    margin-top: math.div(60px - 12px * 2 - 28px, 2);
+    height: 28px;
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+
+    img {
+      width: auto;
+      height: 28px;
+    }
+
+    .title {
+      line-height: 24px;
+      margin: 4px 0 0 0;
+      font-size: 24px;
+    }
+
+    .version {
+      line-height: 14px;
+      margin: 10px 0 0 0;
+      font-size: 14px;
+      color: #999;
+    }
+  }
+
+  .controlbox {
+    .themebutton {
+      opacity: .7;
+      transition: opacity .3s;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+}

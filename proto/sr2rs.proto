@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+// SDRAN-to-ROADSHOW gRPC specification version 1.0.0
+
+service SRRSTelecomSpec {
+	rpc Subscribe(StatReq) returns (StatReport) {}
+}
+
+message StatReq {}
+
+message CellStatReport {
+	uint64 NCGI = 1;
+	double load = 2;
+  double longitude = 3;
+  double latitude = 4;
+  double tx_powerDB = 5;
+}
+
+message UECellStatReport {
+	uint64 NCGI = 1;
+	double RSRP = 2;
+}
+
+message UEStatReport {
+	uint64 IMSI = 1;
+	uint64 associatedNCGI = 2;
+  double longitude = 3;
+  double latitude = 4;
+	repeated UECellStatReport UE_cell_reports = 5;
+}
+
+message StatReport {
+	repeated CellStatReport cell_reports = 1;
+	repeated UEStatReport UE_reports = 2;
+}

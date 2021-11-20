@@ -1,0 +1,53 @@
+{
+  "name": "holocore-show",
+  "version": "1.0.0",
+  "description": "HOLOCORE visual demonstration",
+  "main": "src/index.ts",
+  "repository": "https://github.com/wldh-g/holocore-show",
+  "author": "Jio <jio@wldh.org>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "next dev ."
+  },
+  "engines": {
+    "npm": "USE YARN INSTEAD OF NPM"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0",
+    "@grpc/grpc-js": "^1.4.4",
+    "@grpc/proto-loader": "^0.6.7",
+    "@types/node": "^16.11.9",
+    "@types/react": "^17.0.35",
+    "@types/react-dom": "^17.0.11",
+    "axios": "^0.24.0",
+    "csstype": "^3.0.10",
+    "leaflet": "^1.7.1",
+    "next": "^12.0.4",
+    "pino": "^7.3.0",
+    "react": "^17.0.2",
+    "react-app": "^1.1.2",
+    "react-dom": "^17.0.2",
+    "react-leaflet": "^3.2.2",
+    "react-toastify": "^8.1.0",
+    "sass": "^1.43.4",
+    "theme-ui": "^0.12.0",
+    "typescript": "^4.5.2",
+    "webpack": "^5.64.2"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.7.6",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.19.0",
+    "eslint-config-airbnb": "^19.0.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jest": "^25.2.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0"
+  }
+}
