@@ -1,20 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+
+import axios from 'axios';
+
 import {
-  MapContainer, TileLayer, Circle, LayerGroup, LayersControl, Marker, Tooltip, Polyline,
+  Circle, LayerGroup, LayersControl, MapContainer, Marker, Polyline, TileLayer, Tooltip,
 } from 'react-leaflet';
 import { LatLngTuple, Map as LeafletMap } from 'leaflet';
-import type StatReport from 'sr2rs';
-import axios from 'axios';
-import { ToastContainer, toast } from 'react-toastify';
-import pino from 'pino';
-import moment from 'moment';
-import { useColorMode, Heading } from 'theme-ui';
-
-import $ from './map.module.scss';
 import 'leaflet/dist/leaflet.css';
+
+import moment from 'moment';
+import pino from 'pino';
+
+import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+import type StatReport from 'sr2rs';
+import { Heading, useColorMode } from 'theme-ui';
+
 import { CellCenterIcon, CellPhoneIcon } from './marker-icon';
+import $ from './map.module.scss';
 
 const rangeFactor = 1250;
 const log = pino();
@@ -35,6 +39,10 @@ const Map = function Map() {
 
   useEffect(() => {
     setInterval(() => {
+      if (document.hidden) {
+        return;
+      }
+
       axios.get('/api/sr2rs', {
         headers: { 'Request-Time': moment().toString() },
         timeout: 5300,

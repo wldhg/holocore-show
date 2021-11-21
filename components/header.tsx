@@ -1,8 +1,7 @@
 import React from 'react';
 import {
-  useColorMode, Button, Heading, Text,
+  Button, Heading, Text, useColorMode,
 } from 'theme-ui';
-
 import $ from './header.module.scss';
 
 const Header = function Header() {

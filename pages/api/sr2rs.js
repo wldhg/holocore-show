@@ -59,8 +59,8 @@ const api = (I, O) => {
       O.end(JSON.stringify(
         {
           error: {
-            code: '-1',
-            details: 'Request-Time header is invalid',
+            code: '-2',
+            details: 'Request-Time header is invalid or too past',
             metadata: {},
           },
         },
@@ -73,7 +73,7 @@ const api = (I, O) => {
     O.end(JSON.stringify(
       {
         error: {
-          code: '-1',
+          code: '-3',
           details: 'Request-Time header is missing',
           metadata: {},
         },
