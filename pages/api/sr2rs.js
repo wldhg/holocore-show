@@ -23,7 +23,7 @@ const client = new protoDescriptor.SRRSTelecomSpec(
 const api = (I, O) => {
   O.setHeader('Content-Type', 'application/json; charset=utf-8');
   if (I.headers['request-time'] && I.headers['request-time'] !== 'undefined') {
-    const requestTime = moment(I.headers['request-time']);
+    const requestTime = moment(I.headers['request-time'], 'x', true);
     const now = moment();
     if (requestTime.isValid() && requestTime.isAfter(now.subtract(5, 'second'))) {
       return new Promise((resolve, _) => {

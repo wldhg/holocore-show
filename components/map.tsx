@@ -56,7 +56,7 @@ const Map = function Map() {
       }
 
       axios.get('/api/sr2rs', {
-        headers: { 'Request-Time': moment().toString() },
+        headers: { 'Request-Time': moment().format('x') },
         timeout: 5300,
       }).then((res) => {
         const report: typeof StatReport = res.data.data;
