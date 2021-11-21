@@ -3,6 +3,8 @@ HOLOCORE Roadshow
 
 This repository implements RAN state viewer for HOLOCORE demonstration.
 
+![](./screenshot_v1.1.1.jpeg)
+
 You can configure below environment variables to this program.
 
 - `NEXT_PUBLIC_UPDATE_INTERVAL` : Data update interval in miliseconds. (default: `1000` = 1 seconds)
