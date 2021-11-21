@@ -7,6 +7,7 @@ import type StatReport from 'sr2rs';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import pino from 'pino';
+import moment from 'moment';
 import { useColorMode, Heading } from 'theme-ui';
 
 import $ from './map.module.scss';
@@ -34,7 +35,10 @@ const Map = function Map() {
 
   useEffect(() => {
     setInterval(() => {
-      axios.get('/api/sr2rs').then((res) => {
+      axios.get('/api/sr2rs', {
+        headers: { 'Request-Time': moment().toString() },
+        timeout: 5300,
+      }).then((res) => {
         const report: typeof StatReport = res.data.data;
 
         if (res.data.error != null) {
