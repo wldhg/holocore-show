@@ -24,7 +24,8 @@ const api = (I, O) => {
   O.setHeader('Content-Type', 'application/json; charset=utf-8');
   if (I.headers['request-time'] && I.headers['request-time'] !== 'undefined') {
     const requestTime = moment(I.headers['request-time']);
-    if (requestTime.isValid() && requestTime.isAfter(moment().subtract(2, 'second'))) {
+    const now = moment();
+    if (requestTime.isValid() && requestTime.isAfter(now.subtract(2, 'second'))) {
       return new Promise((resolve, _) => {
         let timedOut = false;
         const timer = setTimeout(() => {
@@ -56,15 +57,27 @@ const api = (I, O) => {
     }
 
     return new Promise((resolve, _) => {
-      O.end(JSON.stringify(
-        {
-          error: {
-            code: '-2',
-            details: 'Request-Time header is invalid or too past',
-            metadata: {},
+      if (!requestTime.isValid()) {
+        O.end(JSON.stringify(
+          {
+            error: {
+              code: '-2',
+              details: 'Request-Time header is invalid',
+              metadata: {},
+            },
           },
-        },
-      ));
+        ));
+      } else {
+        O.end(JSON.stringify(
+          {
+            error: {
+              code: '-3',
+              details: `Request-Time header is too past (${now - requestTime})`,
+              metadata: {},
+            },
+          },
+        ));
+      }
       resolve();
     });
   }
@@ -73,7 +86,7 @@ const api = (I, O) => {
     O.end(JSON.stringify(
       {
         error: {
-          code: '-3',
+          code: '-4',
           details: 'Request-Time header is missing',
           metadata: {},
         },

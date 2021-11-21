@@ -3,6 +3,7 @@ import {
   Button, Heading, Text, useColorMode,
 } from 'theme-ui';
 import $ from './header.module.scss';
+import p from '../package.json';
 
 const Header = function Header() {
   const [colorMode, setColorMode] = useColorMode();
@@ -18,7 +19,10 @@ const Header = function Header() {
         <div className={$.logobox}>
           <img src="./holocore.svg" alt="HOLOCORE logo" />
           <Heading as="h1" className={$.title}>Roadshow</Heading>
-          <Text className={$.version}>v1.0.0</Text>
+          <Text className={$.version}>
+            v
+            {p.version}
+          </Text>
         </div>
         <div className={$.controlbox}>
           <Button

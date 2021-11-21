@@ -17,11 +17,18 @@ import 'react-toastify/dist/ReactToastify.css';
 import type StatReport from 'sr2rs';
 import { Heading, useColorMode } from 'theme-ui';
 
-import { CellCenterIcon, CellPhoneIcon } from './marker-icon';
+import {
+  CellCenterIcon, CellPhoneIconBest, CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst,
+  CellPhoneIcon,
+} from './marker-icon';
 import $ from './map.module.scss';
 
-const rangeFactor = 1250;
+const rangeFactor = 500;
 const log = pino();
+const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseInt(x, 10));
+
+let avabCellLinesDisappearTimeout: number;
+let avabCellTargetUE = null;
 
 const Map = function Map() {
   const [colorMode] = useColorMode();
@@ -29,6 +36,7 @@ const Map = function Map() {
   const [cellCenters, setCellCenters] = useState<(typeof Marker)[]>([]);
   const [cellRanges, setCellRanges] = useState<(typeof Circle)[]>([]);
   const [assocLines, setAssocLines] = useState<(typeof Polyline)[]>([]);
+  const [avabCellLines, setAvabCellLines] = useState<(typeof Polyline)[]>([]);
   const [floatingState] = useState<{
     map: LeafletMap | null;
     mapFlied: boolean;
@@ -80,7 +88,7 @@ const Map = function Map() {
               icon={CellCenterIcon}
               position={[cr.latitude, cr.longitude]}
             >
-              <Tooltip permanent opacity={0.7} direction="bottom">
+              <Tooltip opacity={0.7} direction="bottom">
                 <b>{`[${cr.NCGI}]`}</b>
                 &nbsp;(TX:&nbsp;
                 <span>{cr.txPowerDB}</span>
@@ -103,10 +111,10 @@ const Map = function Map() {
               radius={range}
               pathOptions={{
                 fillColor: '#f00',
-                fillOpacity: 0.1,
+                fillOpacity: 0.05,
                 color: '#f00',
               }}
-              stroke
+              stroke={false}
             />,
           );
         });
@@ -115,7 +123,7 @@ const Map = function Map() {
           // RSRP information calculation
           let currentRSRP = 0;
           let isCurrentRSRPMax = false;
-          let highestRSRP = 0;
+          let highestRSRP = -20000;
           let highestNCGI = 0;
           for (const uecr of ur.UECellReports) {
             if (uecr.NCGI === ur.associatedNCGI) {
@@ -130,12 +138,63 @@ const Map = function Map() {
             isCurrentRSRPMax = true;
           }
 
+          // Icon selection
+          let icon = CellPhoneIcon;
+          if (stateLevel.length > 0 && currentRSRP > stateLevel[0]) {
+            icon = CellPhoneIconBest[Number(isCurrentRSRPMax)];
+          } else if (stateLevel.length > 1 && currentRSRP > stateLevel[1]) {
+            icon = CellPhoneIconGood[Number(isCurrentRSRPMax)];
+          } else if (stateLevel.length > 2 && currentRSRP > stateLevel[2]) {
+            icon = CellPhoneIconPoor[Number(isCurrentRSRPMax)];
+          } else if (stateLevel.length > 3 && currentRSRP > stateLevel[3]) {
+            // eslint-disable-next-line prefer-destructuring
+            icon = CellPhoneIconWorst[0];
+          }
+
+          // UE highlighting
+          const accHighlight = () => {
+            const acc = []; // available cell-line candidates
+            ur.UECellReports.forEach((uecr) => {
+              acc.push(
+                <Polyline
+                  key={`acc-${ur.IMSI}-${uecr.NCGI}`}
+                  positions={[
+                    [ur.latitude, ur.longitude],
+                    [
+                      report.cellReports.find((cr) => cr.NCGI === uecr.NCGI).latitude,
+                      report.cellReports.find((cr) => cr.NCGI === uecr.NCGI).longitude,
+                    ],
+                  ]}
+                  color={uecr.NCGI === ur.associatedNCGI ? 'chartreuse' : 'cyan'}
+                  weight={2}
+                  opacity={1}
+                  smoothFactor={1}
+                />,
+              );
+            });
+            setAvabCellLines(acc);
+          };
+          if (ur.IMSI === avabCellTargetUE) {
+            accHighlight();
+          }
+
           // UE position
           upc.push(
             <Marker
               key={`upc-${ur.IMSI}`}
-              icon={CellPhoneIcon}
+              icon={icon}
               position={[ur.latitude, ur.longitude]}
+              eventHandlers={{
+                click: () => {
+                  clearTimeout(avabCellLinesDisappearTimeout);
+                  avabCellTargetUE = ur.IMSI;
+                  accHighlight();
+                  avabCellLinesDisappearTimeout = setTimeout(() => {
+                    setAvabCellLines([]);
+                    avabCellTargetUE = '';
+                  }, 5000) as unknown as number;
+                },
+              }}
             >
               <Tooltip opacity={0.7} direction="bottom">
                 <b>{`[${ur.IMSI}]`}</b>
@@ -154,6 +213,7 @@ const Map = function Map() {
                       <span>{highestNCGI}</span>
                       &nbsp;(
                       <span>{highestRSRP}</span>
+                      )
                     </>
                   ) : null
                 }
@@ -185,25 +245,46 @@ const Map = function Map() {
             cellCenter[0] / report.cellReports.length,
             cellCenter[1] / report.cellReports.length,
           ];
-          floatingState.map.flyTo(center, 9.8);
-          log.info(`Flied map into the initial center: ${center}`);
           floatingState.mapFlied = true;
-          toast.success(
-            <div>
-              <b>
-                Welcome&nbsp;to&nbsp;the&nbsp;
-                <Heading as="span">Roadshow</Heading>
-                !
-              </b>
-              <br />
-              <span>
-                Automatically flied to the center of visible cells.
-              </span>
-            </div>,
-            {
-              autoClose: 10000,
-            },
-          );
+          if ((process.env.NEXT_PUBLIC_WANNA_FLY || 'true') === 'true') {
+            floatingState.map.flyTo(center, 9.8);
+            log.info(`Flied map into the initial center: ${center}`);
+            toast.success(
+              <div>
+                <b>
+                  Welcome&nbsp;to&nbsp;the&nbsp;
+                  <Heading as="span">Roadshow</Heading>
+                  !
+                </b>
+                <br />
+                <span>
+                  Automatically flied to the center of visible cells.
+                </span>
+              </div>,
+              {
+                autoClose: 10000,
+              },
+            );
+          } else {
+            floatingState.map.setView(center, 9.8);
+            log.info(`Moved map into the initial center: ${center}`);
+            toast.success(
+              <div>
+                <b>
+                  Welcome&nbsp;to&nbsp;the&nbsp;
+                  <Heading as="span">Roadshow</Heading>
+                  !
+                </b>
+                <br />
+                <span>
+                  Automatically moved to the center of visible cells.
+                </span>
+              </div>,
+              {
+                autoClose: 10000,
+              },
+            );
+          }
           toast.info(
             <div>
               <b>Initial&nbsp;Statistics</b>
@@ -228,6 +309,20 @@ const Map = function Map() {
         setCellRanges(crc);
         setUEPositions(upc);
         setAssocLines(alc);
+      }).catch((e: Error) => {
+        log.error(e);
+        toast.error(
+          <div>
+            <b>
+              Error&nbsp;:&nbsp;
+              {e.name}
+            </b>
+            <br />
+            <span>
+              {e.message}
+            </span>
+          </div>,
+        );
       });
     }, Number.parseInt(process.env.NEXT_PUBLIC_UPDATE_INTERVAL, 10) || 1000);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
@@ -264,6 +359,11 @@ const Map = function Map() {
             <LayersControl.Overlay checked name="Association lines">
               <LayerGroup>
                 {assocLines}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay checked name="Available cell-UE lines">
+              <LayerGroup>
+                {avabCellLines}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Cell ranges">
