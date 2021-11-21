@@ -8,7 +8,9 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "next dev ."
+    "dev": "next dev .",
+    "build": "next build .",
+    "start": "next start ."
   },
   "engines": {
     "npm": "USE YARN INSTEAD OF NPM"
@@ -37,6 +39,7 @@
     "webpack": "^5.64.2"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^12.0.4",
     "@types/leaflet": "^1.7.6",
     "@typescript-eslint/eslint-plugin": "^4.14.0",
     "@typescript-eslint/parser": "^4.14.1",

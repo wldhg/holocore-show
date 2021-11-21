@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from 'react';
 import {
   Button, Heading, Text, useColorMode,
@@ -17,7 +18,7 @@ const Header = function Header() {
     <header>
       <div className={$.header}>
         <div className={$.logobox}>
-          <img src="./holocore.svg" alt="HOLOCORE logo" />
+          <img src="/holocore.svg" alt="HOLOCORE logo" />
           <Heading as="h1" className={$.title}>Roadshow</Heading>
           <Text className={$.version}>
             v
