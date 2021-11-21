@@ -22,4 +22,12 @@ $ yarn
 $ NEXT_PUBLIC_API_ENDPOINT="hakos.holocore.space:3324" yarn dev
 ```
 
+---
+
+### To Do
+
+- [ ] Set correct range factor
+
+---
+
 &copy; Jio Gim.

@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { CellCenterIcon, CellPhoneIcon } from './marker-icon';
 
-const rangeFactor = 1600;
+const rangeFactor = 1250;
 const log = pino();
 
 const Map = function Map() {
