@@ -18,17 +18,20 @@ import type StatReport from 'sr2rs';
 import { Heading, useColorMode } from 'theme-ui';
 
 import {
-  CellCenterIcon, CellPhoneIconBest, CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst,
-  CellPhoneIcon,
+  CellCenterIconNormal, CellCenterIconWarning, CellCenterIconDanger, CellPhoneIconBest,
+  CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst, CellPhoneIcon, CellCenterIcon,
 } from './marker-icon';
 import $ from './map.module.scss';
 
 const rangeFactor = 500;
 const log = pino();
-const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseInt(x, 10));
+const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseFloat(x));
+const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '0.95,0.75,0.0').split(',').map((x) => Number.parseFloat(x));
 
 let avabCellLinesDisappearTimeout: number;
 let avabCellTargetUE = null;
+let connUELinesDisappearTimeout: number;
+let connUETargetCell = null;
 
 const Map = function Map() {
   const [colorMode] = useColorMode();
@@ -37,6 +40,7 @@ const Map = function Map() {
   const [cellRanges, setCellRanges] = useState<(typeof Circle)[]>([]);
   const [assocLines, setAssocLines] = useState<(typeof Polyline)[]>([]);
   const [avabCellLines, setAvabCellLines] = useState<(typeof Polyline)[]>([]);
+  const [connUELines, setConnUELines] = useState<(typeof Polyline)[]>([]);
   const [floatingState] = useState<{
     map: LeafletMap | null;
     mapFlied: boolean;
@@ -81,12 +85,59 @@ const Map = function Map() {
         const alc = []; // association line candidates
 
         report.cellReports.forEach((cr) => {
+          // Cell highlighting
+          const cucHighlight = () => {
+            const cuc = []; // connected ue-line candidates
+            report.UEReports.forEach((ur) => {
+              if (ur.associatedNCGI === cr.NCGI) {
+                cuc.push(
+                  <Polyline
+                    key={`cuc-${cr.NCGI}-${ur.IMSI}`}
+                    positions={[
+                      [ur.latitude, ur.longitude],
+                      [cr.latitude, cr.longitude],
+                    ]}
+                    color="gold"
+                    weight={2}
+                    opacity={1}
+                    smoothFactor={1}
+                  />,
+                );
+              }
+            });
+            setConnUELines(cuc);
+          };
+          if (cr.NCGI === connUETargetCell) {
+            cucHighlight();
+          }
+
+          // Cell icon selection
+          let icon = CellCenterIcon;
+          if (cr.load > loadLevel[0]) {
+            icon = CellCenterIconDanger;
+          } else if (cr.load > loadLevel[1]) {
+            icon = CellCenterIconWarning;
+          } else if (cr.load > loadLevel[2]) {
+            icon = CellCenterIconNormal;
+          }
+
           // Cell center
           ccc.push(
             <Marker
               key={`ccc-${cr.NCGI}`}
-              icon={CellCenterIcon}
+              icon={icon}
               position={[cr.latitude, cr.longitude]}
+              eventHandlers={{
+                click: () => {
+                  clearTimeout(connUELinesDisappearTimeout);
+                  connUETargetCell = cr.NCGI;
+                  cucHighlight();
+                  avabCellLinesDisappearTimeout = setTimeout(() => {
+                    setConnUELines([]);
+                    connUETargetCell = '';
+                  }, 5000) as unknown as number;
+                },
+              }}
             >
               <Tooltip opacity={0.7} direction="bottom">
                 <b>{`[${cr.NCGI}]`}</b>
@@ -361,9 +412,12 @@ const Map = function Map() {
                 {assocLines}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Available cell-UE lines">
+            <LayersControl.Overlay checked name="Highlighted lines">
               <LayerGroup>
                 {avabCellLines}
+              </LayerGroup>
+              <LayerGroup>
+                {connUELines}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Cell ranges">

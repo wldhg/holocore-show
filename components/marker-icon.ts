@@ -6,6 +6,24 @@ export const CellCenterIcon = new Icon({
   iconAnchor: [6, 72],
 });
 
+export const CellCenterIconNormal = new Icon({
+  iconUrl: './markers/cell_center_lime.svg',
+  iconSize: [12, 72],
+  iconAnchor: [6, 72],
+});
+
+export const CellCenterIconWarning = new Icon({
+  iconUrl: './markers/cell_center_orange.svg',
+  iconSize: [12, 72],
+  iconAnchor: [6, 72],
+});
+
+export const CellCenterIconDanger = new Icon({
+  iconUrl: './markers/cell_center_red.svg',
+  iconSize: [12, 72],
+  iconAnchor: [6, 72],
+});
+
 export const CellPhoneIcon = new Icon({
   iconUrl: './markers/cell_phone.svg',
   iconSize: [16, 32],
