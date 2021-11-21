@@ -16,10 +16,18 @@ const theme: Theme = {
     primary: '#91a8d0',
     text: '#000',
     background: '#fff',
+    cella: 'gold',
+    ueass: 'limegreen',
+    unass: 'royalblue',
+    assli: 'mediumseagreen',
     modes: {
       dark: {
         text: '#fff',
         background: '#060606',
+        cella: 'gold',
+        ueass: 'chartreuse',
+        unass: 'cyan',
+        assli: 'green',
       },
     },
   },

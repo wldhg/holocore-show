@@ -12,7 +12,7 @@ You can configure below environment variables to this program.
 - `NEXT_PUBLIC_API_TYPE` : RAN connection type. (`SDRAN` (default) or `RAN2`) \
     <sup>Note: currrently only SDRAN is supported.</sup>
 - `NEXT_PUBLIC_UE_STATELEVEL` : UE state coloring criteria in dBm. (ex/default: `"-106,-116,-126,-156"`)
-- `NEXT_PUBLIC_CELL_LOADLEVEL` : Cell load coloring criteria. (ex/default: `"'0.95,0.75,0.0"`)
+- `NEXT_PUBLIC_CELL_LOADLEVEL` : Cell load coloring criteria. (ex/default: `"0.95,0.75,0.0"`)
 - `NEXT_PUBLIC_WANNA_FLY` : Do you want to fly? (`true` (default) or `false`)
 
 Example environment files can be found on [`.env.example`](/.env.example).

@@ -25,7 +25,7 @@ const api = (I, O) => {
   if (I.headers['request-time'] && I.headers['request-time'] !== 'undefined') {
     const requestTime = moment(I.headers['request-time']);
     const now = moment();
-    if (requestTime.isValid() && requestTime.isAfter(now.subtract(2, 'second'))) {
+    if (requestTime.isValid() && requestTime.isAfter(now.subtract(5, 'second'))) {
       return new Promise((resolve, _) => {
         let timedOut = false;
         const timer = setTimeout(() => {
@@ -72,7 +72,7 @@ const api = (I, O) => {
           {
             error: {
               code: '-3',
-              details: `Request-Time header is too past (${now - requestTime})`,
+              details: `Request-Time header is too past (${now - requestTime}s). Your localhost time may be wrong.`,
               metadata: {},
             },
           },

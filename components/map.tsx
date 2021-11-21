@@ -97,7 +97,7 @@ const Map = function Map() {
                       [ur.latitude, ur.longitude],
                       [cr.latitude, cr.longitude],
                     ]}
-                    color="gold"
+                    color="var(--theme-ui-colors-cella)"
                     weight={2}
                     opacity={1}
                     smoothFactor={1}
@@ -216,7 +216,7 @@ const Map = function Map() {
                       report.cellReports.find((cr) => cr.NCGI === uecr.NCGI).longitude,
                     ],
                   ]}
-                  color={uecr.NCGI === ur.associatedNCGI ? 'chartreuse' : 'cyan'}
+                  color={uecr.NCGI === ur.associatedNCGI ? 'var(--theme-ui-colors-ueass)' : 'var(--theme-ui-colors-unass)'}
                   weight={2}
                   opacity={1}
                   smoothFactor={1}
@@ -283,7 +283,7 @@ const Map = function Map() {
                   report.cellReports.find((cr) => cr.NCGI === ur.associatedNCGI).longitude,
                 ],
               ]}
-              color="green"
+              color="var(--theme-ui-colors-assli)"
               weight={2}
               opacity={0.5}
               smoothFactor={1}
