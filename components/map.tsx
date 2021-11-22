@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import {
-  Circle, LayerGroup, LayersControl, MapContainer, Marker, Polyline, TileLayer, Tooltip,
+  Circle, LayerGroup, LayersControl, MapContainer, Marker, Polyline, TileLayer, Tooltip, SVGOverlay,
 } from 'react-leaflet';
 import { LatLngTuple, Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -33,11 +33,25 @@ let avabCellTargetUE = null;
 let connUELinesDisappearTimeout: number;
 let connUETargetCell = null;
 
+const cellLabelReplaces = ['A', 'B', 'C', 'D', 'E', 'F'];
+const getCellLabel = (ncgi: number) => {
+  if (process.env.NEXT_PUBLIC_SHOW_RAW_NCGI === 'true') {
+    return ncgi.toString();
+  }
+  const exLabel = Number(ncgi % 257).toString(6);
+  let reLabel = '';
+  for (let i = 0; i < exLabel.length; i += 1) {
+    reLabel += cellLabelReplaces[exLabel[i]];
+  }
+  return reLabel;
+};
+
 const Map = function Map() {
   const [colorMode] = useColorMode();
   const [uePositions, setUEPositions] = useState<(typeof Marker)[]>([]);
   const [cellCenters, setCellCenters] = useState<(typeof Marker)[]>([]);
   const [cellRanges, setCellRanges] = useState<(typeof Circle)[]>([]);
+  const [cellLabels, setCellLabels] = useState<(typeof SVGOverlay)[]>([]);
   const [assocLines, setAssocLines] = useState<(typeof Polyline)[]>([]);
   const [avabCellLines, setAvabCellLines] = useState<(typeof Polyline)[]>([]);
   const [connUELines, setConnUELines] = useState<(typeof Polyline)[]>([]);
@@ -82,6 +96,7 @@ const Map = function Map() {
         const upc = []; // ue position candidates
         const ccc = []; // cell center candidates
         const crc = []; // cell range candidates
+        const clc = []; // cell label candidates
         const alc = []; // association line candidates
 
         report.cellReports.forEach((cr) => {
@@ -153,6 +168,25 @@ const Map = function Map() {
           cellCenter[0] += cr.latitude;
           cellCenter[1] += cr.longitude;
 
+          // Cell label
+          clc.push(
+            <SVGOverlay key={`clc-${cr.NCGI}`} bounds={[[cr.latitude - 0.01, cr.longitude - 0.01], [cr.latitude, cr.longitude + 0.01]]}>
+              <text
+                x="50%"
+                y="1em"
+                textAnchor="middle"
+                alignmentBaseline="middle"
+                fontSize="2em"
+                fontWeight="bold"
+                fill="var(--theme-ui-colors-text)"
+                stroke="var(--theme-ui-colors-primary)"
+                strokeWidth="0.01em"
+              >
+                {getCellLabel(cr.NCGI)}
+              </text>
+            </SVGOverlay>,
+          );
+
           // Cell ranage
           const range = cr.txPowerDB * rangeFactor;
           crc.push(
@@ -220,6 +254,7 @@ const Map = function Map() {
                   weight={2}
                   opacity={1}
                   smoothFactor={1}
+                  dashArray={uecr.NCGI === ur.associatedNCGI ? undefined : [5, 5]}
                 />,
               );
             });
@@ -268,6 +303,11 @@ const Map = function Map() {
                     </>
                   ) : null
                 }
+                <br />
+                <b>Visible Cells&nbsp;:&nbsp;</b>
+                <span>
+                  {ur.UECellReports.map((uecr) => `${getCellLabel(uecr.NCGI)}`).join(', ')}
+                </span>
               </Tooltip>
             </Marker>,
           );
@@ -359,6 +399,7 @@ const Map = function Map() {
         setCellCenters(ccc);
         setCellRanges(crc);
         setUEPositions(upc);
+        setCellLabels(clc);
         setAssocLines(alc);
       }).catch((e: Error) => {
         log.error(e);
@@ -428,6 +469,9 @@ const Map = function Map() {
             <LayersControl.Overlay checked name="Cell centers">
               <LayerGroup>
                 {cellCenters}
+              </LayerGroup>
+              <LayerGroup>
+                {cellLabels}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="UEs">

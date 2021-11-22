@@ -25,7 +25,7 @@ const api = (I, O) => {
   if (I.headers['request-time'] && I.headers['request-time'] !== 'undefined') {
     const requestTime = moment(I.headers['request-time'], 'x', true);
     const now = moment();
-    if (requestTime.isValid() && requestTime.isAfter(now.subtract(5, 'second'))) {
+    if (requestTime.isValid() && requestTime.isAfter(now.clone().subtract(6, 'second'))) {
       return new Promise((resolve, _) => {
         let timedOut = false;
         const timer = setTimeout(() => {
