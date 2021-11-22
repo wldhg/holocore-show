@@ -205,6 +205,23 @@ const Map = function Map() {
         });
 
         report.UEReports.forEach((ur) => {
+          if (ur.isRRCIdle) {
+            upc.push(
+              <Marker
+                key={`upc-${ur.IMSI}`}
+                icon={CellPhoneIcon}
+                position={[ur.latitude, ur.longitude]}
+              >
+                <Tooltip opacity={0.7} direction="bottom">
+                  <b>{`[${ur.IMSI}]`}</b>
+                  <br />
+                  <span>Not connected to any eNodeB</span>
+                </Tooltip>
+              </Marker>,
+            );
+            return;
+          }
+
           // RSRP information calculation
           let currentRSRP = 0;
           let isCurrentRSRPMax = false;

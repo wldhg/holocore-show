@@ -16,6 +16,7 @@ declare module 'sr2rs' {
         readonly NCGI: number;
         readonly RSRP: number;
       }[];
+      readonly isRRCIdle: boolean;
     }[];
   };
   export default StatReport;
