@@ -512,12 +512,14 @@ const Map = function Map() {
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
               />
             </LayersControl.BaseLayer>
-            <LayersControl.Overlay checked name="General UE lines">
-              <LayerGroup>
-                {assocLines}
-              </LayerGroup>
+            <LayersControl.Overlay checked name="UE waypoints and routes">
               <LayerGroup>
                 {ueTargetLines}
+              </LayerGroup>
+            </LayersControl.Overlay>
+            <LayersControl.Overlay checked name="UE association lines">
+              <LayerGroup>
+                {assocLines}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Highlighted lines">
