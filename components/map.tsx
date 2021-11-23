@@ -145,6 +145,11 @@ const Map = function Map() {
               eventHandlers={{
                 click: () => {
                   clearTimeout(connUELinesDisappearTimeout);
+                  if (connUETargetCell === cr.NCGI) {
+                    connUETargetCell = '';
+                    setConnUELines([]);
+                    return;
+                  }
                   connUETargetCell = cr.NCGI;
                   cucHighlight();
                   avabCellLinesDisappearTimeout = setTimeout(() => {
@@ -311,6 +316,11 @@ const Map = function Map() {
               eventHandlers={{
                 click: () => {
                   clearTimeout(avabCellLinesDisappearTimeout);
+                  if (avabCellTargetUE === ur.IMSI) {
+                    avabCellTargetUE = '';
+                    setAvabCellLines([]);
+                    return;
+                  }
                   avabCellTargetUE = ur.IMSI;
                   accHighlight();
                   avabCellLinesDisappearTimeout = setTimeout(() => {
