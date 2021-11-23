@@ -8,7 +8,6 @@ import {
 import { LatLngTuple, Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import moment from 'moment';
 import pino from 'pino';
 
 import { toast, ToastContainer } from 'react-toastify';
@@ -16,6 +15,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import type StatReport from 'sr2rs';
 import { Heading, useColorMode } from 'theme-ui';
+
+import PolylineArrow from './polyline-arrowhead';
 
 import {
   CellCenterIconNormal, CellCenterIconWarning, CellCenterIconDanger, CellPhoneIconBest,
@@ -49,6 +50,7 @@ const getCellLabel = (ncgi: number) => {
 const Map = function Map() {
   const [colorMode] = useColorMode();
   const [uePositions, setUEPositions] = useState<(typeof Marker)[]>([]);
+  const [ueTargetLines, setUETargetLines] = useState<PolylineArrow[]>([]);
   const [cellCenters, setCellCenters] = useState<(typeof Marker)[]>([]);
   const [cellRanges, setCellRanges] = useState<(typeof Circle)[]>([]);
   const [cellLabels, setCellLabels] = useState<(typeof SVGOverlay)[]>([]);
@@ -69,10 +71,7 @@ const Map = function Map() {
         return;
       }
 
-      axios.get('/api/sr2rs', {
-        headers: { 'Request-Time': moment().format('x') },
-        timeout: 5300,
-      }).then((res) => {
+      axios.get('/api/sr2rs', { timeout: 5000 }).then((res) => {
         const report: typeof StatReport = res.data.data;
 
         if (res.data.error != null) {
@@ -94,6 +93,7 @@ const Map = function Map() {
 
         const cellCenter = [0, 0];
         const upc = []; // ue position candidates
+        const utc = []; // ue target point candidates
         const ccc = []; // cell center candidates
         const crc = []; // cell range candidates
         const clc = []; // cell label candidates
@@ -329,6 +329,25 @@ const Map = function Map() {
             </Marker>,
           );
 
+          // Route line
+          if (ur.targetLatitude !== 0.0 && ur.targetLongitude !== 0.0) {
+            utc.push(
+              <PolylineArrow
+                key={`utc-${ur.IMSI}`}
+                positions={[
+                  [ur.latitude, ur.longitude],
+                  [ur.targetLatitude, ur.targetLongitude],
+                ]}
+                color="var(--theme-ui-colors-route)"
+                weight={2}
+                opacity={1}
+                smoothFactor={1}
+                dashArray={[5, 5]}
+                arrowheads={{ frequency: 'endonly', size: '24px' }}
+              />,
+            );
+          }
+
           // Association line
           alc.push(
             <Polyline
@@ -418,6 +437,7 @@ const Map = function Map() {
         setUEPositions(upc);
         setCellLabels(clc);
         setAssocLines(alc);
+        setUETargetLines(utc);
       }).catch((e: Error) => {
         log.error(e);
         toast.error(
@@ -465,9 +485,12 @@ const Map = function Map() {
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
               />
             </LayersControl.BaseLayer>
-            <LayersControl.Overlay checked name="Association lines">
+            <LayersControl.Overlay checked name="General UE lines">
               <LayerGroup>
                 {assocLines}
+              </LayerGroup>
+              <LayerGroup>
+                {ueTargetLines}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Highlighted lines">

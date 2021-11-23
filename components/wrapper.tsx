@@ -21,6 +21,7 @@ const theme: Theme = {
     ueass: 'limegreen',
     unass: 'royalblue',
     assli: 'mediumseagreen',
+    route: 'gray',
     modes: {
       dark: {
         text: '#fff',
@@ -29,6 +30,7 @@ const theme: Theme = {
         ueass: 'chartreuse',
         unass: 'cyan',
         assli: 'green',
+        route: 'gray',
       },
     },
   },

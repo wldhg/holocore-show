@@ -2407,6 +2407,11 @@ gensync@^1.0.0-beta.2:
   resolved "https://registry.yarnpkg.com/gensync/-/gensync-1.0.0-beta.2.tgz#32a6ee76c3d7f52d46b2b1ae5d93fea8580a25e0"
   integrity sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==
 
+geojson@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/geojson/-/geojson-0.5.0.tgz#3cd6c96399be65b56ee55596116fe9191ce701c0"
+  integrity sha1-PNbJY5m+ZbVu5VWWEW/pGRznAcA=
+
 get-caller-file@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/get-caller-file/-/get-caller-file-2.0.5.tgz#4f94412a82db32f36e3b0b9741f8a97feb031f7e"
@@ -2908,7 +2913,22 @@ language-tags@^1.0.5:
   dependencies:
     language-subtag-registry "~0.3.2"
 
-leaflet@^1.7.1:
+leaflet-arrowheads@^1.2.3:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/leaflet-arrowheads/-/leaflet-arrowheads-1.2.3.tgz#3387d0e206426d63d52ef5cf3307ccb8d8db700a"
+  integrity sha512-AbsMcGLQv+X2vc3sVQrdl9GHB6uNRqJT8yKg9HAy0pq5Vuy0drJufTbD7H0sixx3F/ylR5zOA8hXIojyZXPxhA==
+  dependencies:
+    leaflet "^1.6.0"
+    leaflet-geometryutil "^0.9.3"
+
+leaflet-geometryutil@^0.9.3:
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/leaflet-geometryutil/-/leaflet-geometryutil-0.9.3.tgz#e10fa302d99d4b1d3c6365a1f39298635a2704cd"
+  integrity sha512-Wi6YvfNx/Xu9q35AEfXpsUXmIFLen/MO+C2qimxHRnjyeyOxBhdcZa6kSiReaOX0cGK7yQInqrzz0dkIqZ8Dpg==
+  dependencies:
+    leaflet ">=0.7.0"
+
+leaflet@>=0.7.0, leaflet@^1.6.0, leaflet@^1.7.1:
   version "1.7.1"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.7.1.tgz#10d684916edfe1bf41d688a3b97127c0322a2a19"
   integrity sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==
@@ -3074,11 +3094,6 @@ minimist@^1.2.0, minimist@^1.2.5:
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
   integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
-
-moment@^2.29.1:
-  version "2.29.1"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.29.1.tgz#b2be769fa31940be9eeea6469c075e35006fa3d3"
-  integrity sha512-kHmoybcPV8Sqy59DwNDY3Jefr64lK/by/da0ViFcuA4DH0vQg5Q6Ze5VimxkfQNSC+Mls/Kx53s7TjP1RhFEDQ==
 
 ms@2.0.0:
   version "2.0.0"

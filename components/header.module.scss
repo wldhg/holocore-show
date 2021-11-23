@@ -36,6 +36,10 @@
   }
 
   .controlbox {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+
     .themebutton {
       opacity: .7;
       transition: opacity .3s;

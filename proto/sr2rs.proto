@@ -28,6 +28,8 @@ message UEStatReport {
   double latitude = 4;
 	repeated UECellStatReport UE_cell_reports = 5;
 	bool isRRC_idle = 6;
+	double target_longitude = 7;
+	double target_latitude = 8;
 }
 
 message StatReport {

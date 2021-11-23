@@ -1,5 +1,4 @@
-import moment from 'moment';
-import { loadPackageDefinition, credentials } from '@grpc/grpc-js';
+import { loadPackageDefinition, credentials, getClientChannel } from '@grpc/grpc-js';
 import { loadSync } from '@grpc/proto-loader';
 
 const packageDefinition = loadSync(
@@ -15,84 +14,58 @@ const packageDefinition = loadSync(
 
 const protoDescriptor = loadPackageDefinition(packageDefinition);
 
-const client = new protoDescriptor.SRRSTelecomSpec(
-  process.env.NEXT_PUBLIC_API_ENDPOINT || 'localhost:3324',
-  credentials.createInsecure(),
-);
+let client = null;
+
+const initClient = () => {
+  if (client != null) {
+    getClientChannel(client).close();
+    client = null;
+  }
+  client = new protoDescriptor.SRRSTelecomSpec(
+    process.env.NEXT_PUBLIC_API_ENDPOINT || 'localhost:3324',
+    credentials.createInsecure(),
+  );
+  // eslint-disable-next-line no-console
+  console.log('API - Reconnect request proceeded.');
+};
+
+initClient();
 
 const api = (I, O) => {
   O.setHeader('Content-Type', 'application/json; charset=utf-8');
-  if (I.headers['request-time'] && I.headers['request-time'] !== 'undefined') {
-    const requestTime = moment(I.headers['request-time'], 'x', true);
-    const now = moment();
-    if (requestTime.isValid() && requestTime.isAfter(now.clone().subtract(6, 'second'))) {
-      return new Promise((resolve, _) => {
-        let timedOut = false;
-        const timer = setTimeout(() => {
-          timedOut = true;
-          O.end(JSON.stringify(
-            {
-              error: {
-                code: '-1',
-                details: 'gRPC timed out',
-                metadata: {},
-              },
-            },
-          ));
-          resolve();
-        }, 5000);
-        client.subscribe({}, (err, response) => {
-          if (!timedOut) {
-            clearTimeout(timer);
-            O.end(JSON.stringify(
-              {
-                error: err,
-                data: response,
-              },
-            ));
-            resolve();
-          }
-        });
-      });
-    }
-
-    return new Promise((resolve, _) => {
-      if (!requestTime.isValid()) {
-        O.end(JSON.stringify(
-          {
-            error: {
-              code: '-2',
-              details: 'Request-Time header is invalid',
-              metadata: {},
-            },
-          },
-        ));
-      } else {
-        O.end(JSON.stringify(
-          {
-            error: {
-              code: '-3',
-              details: `Request-Time header is too past (${now - requestTime}s). Your localhost time may be wrong.`,
-              metadata: {},
-            },
-          },
-        ));
-      }
-      resolve();
-    });
+  if (
+    client == null
+    || (I.headers['other-command'] && I.headers['other-command'] === 'reconnect')
+  ) {
+    initClient();
   }
-
   return new Promise((resolve, _) => {
-    O.end(JSON.stringify(
-      {
-        error: {
-          code: '-4',
-          details: 'Request-Time header is missing',
-          metadata: {},
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      O.end(JSON.stringify(
+        {
+          error: {
+            code: '-1',
+            details: 'gRPC timed out',
+            metadata: {},
+          },
         },
-      },
-    ));
-    resolve();
+      ));
+      resolve();
+    }, 3000);
+    client.subscribe({}, (err, response) => {
+      if (!timedOut) {
+        clearTimeout(timer);
+        O.end(JSON.stringify(
+          {
+            error: err,
+            data: response,
+          },
+        ));
+        resolve();
+      }
+    });
   });
 };
 
