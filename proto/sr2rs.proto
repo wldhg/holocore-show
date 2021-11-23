@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// SDRAN-to-ROADSHOW gRPC specification version 1.2.1
+// SDRAN-to-ROADSHOW gRPC specification version 1.2.2
 
 service SRRSTelecomSpec {
 	rpc Subscribe(StatReq) returns (StatReport) {}
@@ -31,6 +31,7 @@ message UEStatReport {
 	repeated double route_longitudes = 7;
 	repeated double route_latitudes = 8;
 	int64 route_next_point = 9;
+	bool is_route_reversed = 10;
 }
 
 message StatReport {

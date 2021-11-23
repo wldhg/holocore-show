@@ -66,7 +66,7 @@ const Map = function Map() {
   });
 
   useEffect(() => {
-    setInterval(() => {
+    const mapUpdateInterval = setInterval(() => {
       if (document.hidden) {
         return;
       }
@@ -187,7 +187,7 @@ const Map = function Map() {
                 stroke="var(--theme-ui-colors-primary)"
                 strokeWidth="0.01em"
               >
-                {getCellLabel(cr.NCGI)}
+                {getCellLabel(Number.parseInt(cr.NCGI, 10))}
               </text>
             </SVGOverlay>,
           );
@@ -211,10 +211,17 @@ const Map = function Map() {
 
         report.UEReports.forEach((ur) => {
           // Route line
-          if (ur.routeNextPoint >= 0 && ur.routeLatitudes.length > 1) {
+          const nextPoint = Number.parseInt(ur.routeNextPoint, 10);
+          if (nextPoint >= 0 && ur.routeLatitudes.length > 0) {
             const positions: LatLngExpression[] = [[ur.latitude, ur.longitude]];
-            for (let i = Math.max(0, ur.routeNextPoint - 1); i < ur.routeLatitudes.length; i += 1) {
-              positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+            if (ur.isRouteReversed) {
+              for (let i = nextPoint; i >= 0; i -= 1) {
+                positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+              }
+            } else {
+              for (let i = nextPoint; i < ur.routeLatitudes.length; i += 1) {
+                positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+              }
             }
             utc.push(
               <PolylineArrow
@@ -225,7 +232,7 @@ const Map = function Map() {
                 opacity={1}
                 smoothFactor={1}
                 dashArray={[5, 5]}
-                arrowheads={{ frequency: 'allvertices', size: '18px' }}
+                arrowheads={{ size: '18px' }}
               />,
             );
           }
@@ -252,7 +259,7 @@ const Map = function Map() {
           let currentRSRP = 0;
           let isCurrentRSRPMax = false;
           let highestRSRP = -20000;
-          let highestNCGI = 0;
+          let highestNCGI = '0';
           for (const uecr of ur.UECellReports) {
             if (uecr.NCGI === ur.associatedNCGI) {
               currentRSRP = uecr.RSRP;
@@ -354,7 +361,7 @@ const Map = function Map() {
                 <br />
                 <b>Visible Cells&nbsp;:&nbsp;</b>
                 <span>
-                  {ur.UECellReports.map((uecr) => `${getCellLabel(uecr.NCGI)}`).join(', ')}
+                  {ur.UECellReports.map((uecr) => `${getCellLabel(Number.parseInt(uecr.NCGI, 10))}`).join(', ')}
                 </span>
               </Tooltip>
             </Marker>,
@@ -466,6 +473,14 @@ const Map = function Map() {
         );
       });
     }, Number.parseInt(process.env.NEXT_PUBLIC_UPDATE_INTERVAL, 10) || 1000);
+
+    return () => {
+      clearInterval(mapUpdateInterval);
+      clearTimeout(avabCellLinesDisappearTimeout);
+      clearTimeout(connUELinesDisappearTimeout);
+      avabCellTargetUE = '';
+      connUETargetCell = '';
+    };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
