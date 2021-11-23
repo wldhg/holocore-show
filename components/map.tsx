@@ -5,7 +5,7 @@ import axios from 'axios';
 import {
   Circle, LayerGroup, LayersControl, MapContainer, Marker, Polyline, TileLayer, Tooltip, SVGOverlay,
 } from 'react-leaflet';
-import { LatLngTuple, Map as LeafletMap } from 'leaflet';
+import { LatLngExpression, LatLngTuple, Map as LeafletMap } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 import pino from 'pino';
@@ -205,6 +205,27 @@ const Map = function Map() {
         });
 
         report.UEReports.forEach((ur) => {
+          // Route line
+          if (ur.routeNextPoint >= 0 && ur.routeLatitudes.length > 1) {
+            const positions: LatLngExpression[] = [[ur.latitude, ur.longitude]];
+            for (let i = Math.max(0, ur.routeNextPoint - 1); i < ur.routeLatitudes.length; i += 1) {
+              positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+            }
+            utc.push(
+              <PolylineArrow
+                key={`utc-${ur.IMSI}`}
+                positions={positions}
+                color="var(--theme-ui-colors-route)"
+                weight={2}
+                opacity={1}
+                smoothFactor={1}
+                dashArray={[5, 5]}
+                arrowheads={{ frequency: 'allvertices', size: '18px' }}
+              />,
+            );
+          }
+
+          // Idle pass
           if (ur.isRRCIdle) {
             upc.push(
               <Marker
@@ -328,25 +349,6 @@ const Map = function Map() {
               </Tooltip>
             </Marker>,
           );
-
-          // Route line
-          if (ur.targetLatitude !== 0.0 && ur.targetLongitude !== 0.0) {
-            utc.push(
-              <PolylineArrow
-                key={`utc-${ur.IMSI}`}
-                positions={[
-                  [ur.latitude, ur.longitude],
-                  [ur.targetLatitude, ur.targetLongitude],
-                ]}
-                color="var(--theme-ui-colors-route)"
-                weight={2}
-                opacity={1}
-                smoothFactor={1}
-                dashArray={[5, 5]}
-                arrowheads={{ frequency: 'endonly', size: '24px' }}
-              />,
-            );
-          }
 
           // Association line
           alc.push(

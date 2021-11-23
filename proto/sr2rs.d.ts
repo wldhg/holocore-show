@@ -17,8 +17,9 @@ declare module 'sr2rs' {
         readonly RSRP: number;
       }[];
       readonly isRRCIdle: boolean;
-      readonly targetLongitude: number;
-      readonly targetLatitude: number;
+      readonly routeLongitudes: number[];
+      readonly routeLatitudes: number[];
+      readonly routeNextPoint: number;
     }[];
   };
   export default StatReport;
