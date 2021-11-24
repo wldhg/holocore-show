@@ -29,6 +29,9 @@ const log = pino();
 const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseFloat(x));
 const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '0.95,0.75,0.0').split(',').map((x) => Number.parseFloat(x));
 
+const wannaPinUETooltip = process.env.NEXT_PUBLIC_ALWAYS_SHOW_UE_TOOLTIP === 'true';
+const wannaDispSINRCQI = process.env.NEXT_PUBLIC_SHOW_SINR_CQI === 'true';
+
 let avabCellLinesDisappearTimeout: number;
 let avabCellTargetUE = null;
 let connUELinesDisappearTimeout: number;
@@ -337,29 +340,49 @@ const Map = function Map() {
                 },
               }}
             >
-              <Tooltip opacity={0.7} direction="bottom">
+              <Tooltip
+                permanent={wannaPinUETooltip}
+                opacity={0.7}
+                direction="bottom"
+                offset={[0, 16]}
+              >
                 <b>{`[${ur.IMSI}]`}</b>
-                <br />
-                <span>Connected to&nbsp;:&nbsp;</span>
-                <span>{ur.associatedNCGI}</span>
-                &nbsp;(
-                <span>{currentRSRP}</span>
-                {isCurrentRSRPMax ? ' ← MAX' : ''}
-                )
+                &nbsp;↔&nbsp;
+                <b>
+                  {getCellLabel(Number.parseInt(ur.associatedNCGI, 10))}
+                  &nbsp;(
+                  {currentRSRP.toFixed(4)}
+                  {isCurrentRSRPMax ? '👍' : ''}
+                  )
+                </b>
+                {
+                  wannaDispSINRCQI && (
+                    <>
+                      <br />
+                      CQI(SINR)&nbsp;:&nbsp;
+                      <span>
+                        {ur.CQI}
+                        &nbsp;(
+                        {ur.SINR.toFixed(4)}
+                        )
+                      </span>
+                    </>
+                  )
+                }
                 {
                   !isCurrentRSRPMax ? (
                     <>
                       <br />
                       <span>Highest&nbsp;RSRP&nbsp;:&nbsp;</span>
-                      <span>{highestNCGI}</span>
+                      <span>{getCellLabel(Number.parseInt(highestNCGI, 10))}</span>
                       &nbsp;(
-                      <span>{highestRSRP}</span>
+                      <span>{highestRSRP.toFixed(4)}</span>
                       )
                     </>
                   ) : null
                 }
                 <br />
-                <b>Visible Cells&nbsp;:&nbsp;</b>
+                <span>Visible Cells&nbsp;:&nbsp;</span>
                 <span>
                   {ur.UECellReports.map((uecr) => `${getCellLabel(Number.parseInt(uecr.NCGI, 10))}`).join(', ')}
                 </span>

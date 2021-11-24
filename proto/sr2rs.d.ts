@@ -21,6 +21,8 @@ declare module 'sr2rs' {
       readonly routeLatitudes: number[];
       readonly routeNextPoint: string;
       readonly isRouteReversed: boolean;
+      readonly SINR: number;
+      readonly CQI: string;
     }[];
   };
   export default StatReport;
