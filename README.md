@@ -3,7 +3,33 @@ HOLOCORE Roadshow
 
 This repository implements RAN state viewer for HOLOCORE demonstration.
 
-![](./screenshot_v1.1.1.jpeg)
+![](./screenshot_v1.3.7.png)
+
+### Features
+
+- Locate UEs and cells on the map
+- Display UE mobility routes
+- Show UE/cell state using icon colors
+- Hover on cell to see its load
+- Hover on UE to see its radio measurement
+- Click cell to show associated UEs
+- Click UE to show available cells
+- Simplify cell name
+- Light/dark mode
+
+### Requirements
+
+- Node.js `>=v16.0.0`
+- Yarn `>=1.22.0`
+
+### Usage
+
+```bash
+$ yarn
+$ NEXT_PUBLIC_API_ENDPOINT="hakos.holocore.space:3324" yarn dev
+```
+
+### Configuration
 
 You can configure below environment variables to this program.
 
@@ -19,17 +45,5 @@ You can configure below environment variables to this program.
 - `NEXT_PUBLIC_WANNA_FLY` : Do you want to fly? (`true` (default) or `false`)
 
 Example environment files can be found on [`.env.example`](/.env.example).
-
-### Requirements
-
-- Node.js `>=v16.0.0`
-- Yarn `>=1.22.0`
-
-### Usage
-
-```bash
-$ yarn
-$ NEXT_PUBLIC_API_ENDPOINT="hakos.holocore.space:3324" yarn dev
-```
 
 &copy; Jio Gim.

@@ -37,6 +37,11 @@ export const CellPhoneIconBest = [
     iconAnchor: [8, 16],
   }),
   new Icon({
+    iconUrl: './markers/cell_phone_blue_failure.svg',
+    iconSize: [16, 32],
+    iconAnchor: [8, 16],
+  }),
+  new Icon({
     iconUrl: './markers/cell_phone_blue_satisfied.svg',
     iconSize: [16, 32],
     iconAnchor: [8, 16],
@@ -46,6 +51,11 @@ export const CellPhoneIconBest = [
 export const CellPhoneIconGood = [
   new Icon({
     iconUrl: './markers/cell_phone_turquoise.svg',
+    iconSize: [16, 32],
+    iconAnchor: [8, 16],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_phone_turquoise_failure.svg',
     iconSize: [16, 32],
     iconAnchor: [8, 16],
   }),
@@ -63,6 +73,11 @@ export const CellPhoneIconPoor = [
     iconAnchor: [8, 16],
   }),
   new Icon({
+    iconUrl: './markers/cell_phone_orange_failure.svg',
+    iconSize: [16, 32],
+    iconAnchor: [8, 16],
+  }),
+  new Icon({
     iconUrl: './markers/cell_phone_orange_satisfied.svg',
     iconSize: [16, 32],
     iconAnchor: [8, 16],
@@ -72,6 +87,11 @@ export const CellPhoneIconPoor = [
 export const CellPhoneIconWorst = [
   new Icon({
     iconUrl: './markers/cell_phone_red.svg',
+    iconSize: [16, 32],
+    iconAnchor: [8, 16],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_phone_red_failure.svg',
     iconSize: [16, 32],
     iconAnchor: [8, 16],
   }),

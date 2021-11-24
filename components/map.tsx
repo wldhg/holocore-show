@@ -277,13 +277,19 @@ const Map = function Map() {
           }
 
           // Icon selection
+          let cpIconIdx = 0;
+          if (wannaDispSINRCQI && ur.CQI === '0') {
+            cpIconIdx = 1;
+          } else if (isCurrentRSRPMax) {
+            cpIconIdx = 2;
+          }
           let icon = CellPhoneIcon;
           if (stateLevel.length > 0 && currentRSRP > stateLevel[0]) {
-            icon = CellPhoneIconBest[Number(isCurrentRSRPMax)];
+            icon = CellPhoneIconBest[cpIconIdx];
           } else if (stateLevel.length > 1 && currentRSRP > stateLevel[1]) {
-            icon = CellPhoneIconGood[Number(isCurrentRSRPMax)];
+            icon = CellPhoneIconGood[cpIconIdx];
           } else if (stateLevel.length > 2 && currentRSRP > stateLevel[2]) {
-            icon = CellPhoneIconPoor[Number(isCurrentRSRPMax)];
+            icon = CellPhoneIconPoor[cpIconIdx];
           } else if (stateLevel.length > 3 && currentRSRP > stateLevel[3]) {
             // eslint-disable-next-line prefer-destructuring
             icon = CellPhoneIconWorst[0];
