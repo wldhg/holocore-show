@@ -20,7 +20,7 @@ import PolylineArrow from './polyline-arrowhead';
 
 import {
   CellCenterIconNormal, CellCenterIconWarning, CellCenterIconDanger, CellPhoneIconBest,
-  CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst, CellPhoneIcon, CellCenterIcon,
+  CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst, CellPhoneIcon, CellCenterIconExploded,
 } from './marker-icon';
 import $ from './map.module.scss';
 
@@ -130,13 +130,13 @@ const Map = function Map() {
           }
 
           // Cell icon selection
-          let icon = CellCenterIcon;
+          let icon = CellCenterIconNormal;
           if (cr.load > loadLevel[0]) {
-            icon = CellCenterIconDanger;
+            icon = CellCenterIconExploded;
           } else if (cr.load > loadLevel[1]) {
-            icon = CellCenterIconWarning;
+            icon = CellCenterIconDanger;
           } else if (cr.load > loadLevel[2]) {
-            icon = CellCenterIconNormal;
+            icon = CellCenterIconWarning;
           }
 
           // Cell center

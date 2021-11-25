@@ -13,12 +13,18 @@ export const CellCenterIconNormal = new Icon({
 });
 
 export const CellCenterIconWarning = new Icon({
-  iconUrl: './markers/cell_center_orange.svg',
+  iconUrl: './markers/cell_center_yellow.svg',
   iconSize: [12, 72],
   iconAnchor: [6, 72],
 });
 
 export const CellCenterIconDanger = new Icon({
+  iconUrl: './markers/cell_center_orange.svg',
+  iconSize: [12, 72],
+  iconAnchor: [6, 72],
+});
+
+export const CellCenterIconExploded = new Icon({
   iconUrl: './markers/cell_center_red.svg',
   iconSize: [12, 72],
   iconAnchor: [6, 72],
