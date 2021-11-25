@@ -164,8 +164,18 @@ const Map = function Map() {
             >
               <Tooltip opacity={0.7} direction="bottom">
                 <b>{`[${cr.NCGI}]`}</b>
-                &nbsp;(TX:&nbsp;
-                <span>{cr.txPowerDB}</span>
+                <br />
+                <span>
+                  {cr.cellType}
+                </span>
+                <br />
+                TX:&nbsp;
+                <span>
+                  {cr.txPowerDB}
+                  &nbsp;dBm
+                </span>
+                &nbsp;(EARFCN=
+                {cr.EARFCN}
                 )
                 <br />
                 <span>Load&nbsp;:&nbsp;</span>
@@ -232,10 +242,9 @@ const Map = function Map() {
                 positions={positions}
                 color="var(--theme-ui-colors-route)"
                 weight={2}
-                opacity={1}
+                opacity={0.3}
                 smoothFactor={1}
-                dashArray={[5, 5]}
-                arrowheads={{ size: '18px' }}
+                arrowheads={{ size: '10px', fill: true, yawn: 45 }}
               />,
             );
           }
@@ -252,6 +261,14 @@ const Map = function Map() {
                   <b>{`[${ur.IMSI}]`}</b>
                   <br />
                   <span>Not connected to any eNodeB</span>
+                  <br />
+                  <span>
+                    Speed:&nbsp;
+                    {ur.mobilitySpeedAvg.toFixed(3)}
+                    &nbsp;(σ:&nbsp;
+                    {ur.mobilitySpeedStdDev.toFixed(3)}
+                    )&nbsp;m/s
+                  </span>
                 </Tooltip>
               </Marker>,
             );
@@ -391,6 +408,14 @@ const Map = function Map() {
                 <span>Visible Cells&nbsp;:&nbsp;</span>
                 <span>
                   {ur.UECellReports.map((uecr) => `${getCellLabel(Number.parseInt(uecr.NCGI, 10))}`).join(', ')}
+                </span>
+                <br />
+                <span>
+                  Speed:&nbsp;
+                  {ur.mobilitySpeedAvg.toFixed(3)}
+                  &nbsp;(σ:&nbsp;
+                  {ur.mobilitySpeedStdDev.toFixed(3)}
+                  )&nbsp;m/s
                 </span>
               </Tooltip>
             </Marker>,

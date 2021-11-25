@@ -1,9 +1,17 @@
 syntax = "proto3";
 
-// SDRAN-to-ROADSHOW gRPC specification version 1.3.0
+// SDRAN-to-ROADSHOW gRPC specification version 1.4.0
 
 service SRRSTelecomSpec {
 	rpc Subscribe(StatReq) returns (StatReport) {}
+}
+
+enum CellType {
+	CELL_UNKNOWN = 0;
+	CELL_MACRO = 1;
+	CELL_MICRO = 2;
+	CELL_PICO = 3;
+	CELL_FEMTO = 4;
 }
 
 message StatReq {}
@@ -14,6 +22,8 @@ message CellStatReport {
   double longitude = 3;
   double latitude = 4;
   double tx_powerDB = 5;
+	uint32 EARFCN = 6;
+	CellType cell_type = 7;
 }
 
 message UECellStatReport {
@@ -34,6 +44,8 @@ message UEStatReport {
 	bool is_route_reversed = 10;
   double SINR = 11;
   uint64 CQI = 12;
+	double mobility_speed_avg = 13;
+	double mobility_speed_std_dev = 14;
 }
 
 message StatReport {

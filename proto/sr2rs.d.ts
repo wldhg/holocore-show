@@ -6,6 +6,8 @@ declare module 'sr2rs' {
       readonly longitude: number;
       readonly latitude: number;
       readonly txPowerDB: number;
+      readonly EARFCN: number;
+      readonly cellType: string;
     }[];
     readonly UEReports: {
       readonly IMSI: string;
@@ -23,6 +25,8 @@ declare module 'sr2rs' {
       readonly isRouteReversed: boolean;
       readonly SINR: number;
       readonly CQI: string;
+      readonly mobilitySpeedAvg: number;
+      readonly mobilitySpeedStdDev: number;
     }[];
   };
   export default StatReport;
