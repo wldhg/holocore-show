@@ -24,7 +24,7 @@ import {
 } from './marker-icon';
 import $ from './map.module.scss';
 
-const rangeFactor = 255;
+const rangeFactor = 11111.1;
 const log = pino();
 const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseFloat(x));
 const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '0.95,0.75,0.0').split(',').map((x) => Number.parseFloat(x));
@@ -213,7 +213,7 @@ const Map = function Map() {
           );
 
           // Cell ranage
-          const range = cr.txPowerDB * rangeFactor;
+          const range = (10 ** (cr.txPowerDB / 10)) / 1000 * rangeFactor;
           crc.push(
             <Circle
               key={`crc-${cr.NCGI}`}
@@ -316,7 +316,7 @@ const Map = function Map() {
             icon = CellPhoneIconPoor[cpIconIdx];
           } else if (stateLevel.length > 3 && currentRSRP > stateLevel[3]) {
             // eslint-disable-next-line prefer-destructuring
-            icon = CellPhoneIconWorst[0];
+            icon = CellPhoneIconWorst[cpIconIdx];
           }
 
           // UE highlighting
