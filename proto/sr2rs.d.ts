@@ -8,6 +8,8 @@ declare module 'sr2rs' {
       readonly txPowerDB: number;
       readonly EARFCN: number;
       readonly cellType: string;
+      readonly maxUECount: string;
+      readonly currentUECount: string;
     }[];
     readonly UEReports: {
       readonly IMSI: string;

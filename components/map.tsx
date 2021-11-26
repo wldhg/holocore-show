@@ -179,7 +179,14 @@ const Map = function Map() {
                 )
                 <br />
                 <span>Load&nbsp;:&nbsp;</span>
-                <span>{cr.load}</span>
+                <span>{cr.load.toFixed(4)}</span>
+                &nbsp;(
+                <span>
+                  {cr.currentUECount}
+                  &nbsp;/&nbsp;
+                  {cr.maxUECount}
+                </span>
+                )
               </Tooltip>
             </Marker>,
           );
