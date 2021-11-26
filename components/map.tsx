@@ -24,7 +24,7 @@ import {
 } from './marker-icon';
 import $ from './map.module.scss';
 
-const rangeFactor = 500;
+const rangeFactor = 255;
 const log = pino();
 const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseFloat(x));
 const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '0.95,0.75,0.0').split(',').map((x) => Number.parseFloat(x));
@@ -447,7 +447,7 @@ const Map = function Map() {
           ];
           floatingState.mapFlied = true;
           if ((process.env.NEXT_PUBLIC_WANNA_FLY || 'true') === 'true') {
-            floatingState.map.flyTo(center, 9.8);
+            floatingState.map.flyTo(center, 12);
             log.info(`Flied map into the initial center: ${center}`);
             toast.success(
               <div>
@@ -466,7 +466,7 @@ const Map = function Map() {
               },
             );
           } else {
-            floatingState.map.setView(center, 9.8);
+            floatingState.map.setView(center, 12);
             log.info(`Moved map into the initial center: ${center}`);
             toast.success(
               <div>
@@ -542,7 +542,7 @@ const Map = function Map() {
       <div className={$.mapwrapper}>
         <MapContainer
           center={[36.0152831, 129.3309997]}
-          zoom={14}
+          zoom={12}
           scrollWheelZoom
           whenCreated={(m) => { floatingState.map = m; }}
           style={{ width: '100%', height: '100%' }}

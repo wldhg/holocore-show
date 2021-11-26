@@ -8,8 +8,13 @@ import axios from 'axios';
 import $ from './header.module.scss';
 import p from '../package.json';
 
-const Header = function Header() {
+type Props = {
+  subtitle?: string;
+};
+
+const Header = function Header(props: Props) {
   const [colorMode, setColorMode] = useColorMode();
+  const { subtitle } = props;
 
   const nextColorModeText = colorMode === 'dark' ? 'Light' : 'Dark';
   const nextColorMode = colorMode === 'dark' ? 'light' : 'dark';
@@ -37,6 +42,9 @@ const Header = function Header() {
             v
             {p.version}
           </Text>
+          <Text className={$.subtitle}>
+            {subtitle}
+          </Text>
         </div>
         <div className={$.controlbox}>
           <Button
@@ -63,6 +71,10 @@ const Header = function Header() {
       </div>
     </header>
   );
+};
+
+Header.defaultProps = {
+  subtitle: '',
 };
 
 export default Header;

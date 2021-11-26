@@ -29,6 +29,10 @@ $ yarn
 $ NEXT_PUBLIC_API_ENDPOINT="hakos.holocore.space:3324" yarn dev
 ```
 
+Then browse below pages:
+- `http://localhost:3000/`
+- `http://localhost:3000/dispLatLng?points=36.014230,129.331049!36.014625,129.331828`
+
 ### Configuration
 
 You can configure below environment variables to this program.
