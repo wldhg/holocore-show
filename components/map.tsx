@@ -454,7 +454,7 @@ const Map = function Map() {
           ];
           floatingState.mapFlied = true;
           if ((process.env.NEXT_PUBLIC_WANNA_FLY || 'true') === 'true') {
-            floatingState.map.flyTo(center, 12);
+            floatingState.map.flyTo(center, 16);
             log.info(`Flied map into the initial center: ${center}`);
             toast.success(
               <div>
@@ -473,7 +473,7 @@ const Map = function Map() {
               },
             );
           } else {
-            floatingState.map.setView(center, 12);
+            floatingState.map.setView(center, 16);
             log.info(`Moved map into the initial center: ${center}`);
             toast.success(
               <div>
@@ -549,7 +549,7 @@ const Map = function Map() {
       <div className={$.mapwrapper}>
         <MapContainer
           center={[36.0152831, 129.3309997]}
-          zoom={12}
+          zoom={16}
           scrollWheelZoom
           whenCreated={(m) => { floatingState.map = m; }}
           style={{ width: '100%', height: '100%' }}
@@ -559,18 +559,24 @@ const Map = function Map() {
               <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                maxNativeZoom={19}
+                maxZoom={25}
               />
             </LayersControl.BaseLayer>
             <LayersControl.BaseLayer checked={colorMode === 'dark'} name="Map: Dark">
               <TileLayer
                 attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+                maxNativeZoom={19}
+                maxZoom={25}
               />
             </LayersControl.BaseLayer>
             <LayersControl.BaseLayer checked={colorMode === 'light'} name="Map: Light">
               <TileLayer
                 attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
                 url="https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+                maxNativeZoom={19}
+                maxZoom={25}
               />
             </LayersControl.BaseLayer>
             <LayersControl.Overlay checked name="UE waypoints and routes">
