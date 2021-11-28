@@ -24,7 +24,7 @@ export const CellCenterIconDanger = new Icon({
   iconAnchor: [6, 72],
 });
 
-export const CellCenterIconExploded = new Icon({
+export const CellCenterIconFull = new Icon({
   iconUrl: './markers/cell_center_red.svg',
   iconSize: [12, 72],
   iconAnchor: [6, 72],

@@ -20,14 +20,15 @@ import PolylineArrow from './polyline-arrowhead';
 
 import {
   CellCenterIconNormal, CellCenterIconWarning, CellCenterIconDanger, CellPhoneIconBest,
-  CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst, CellPhoneIcon, CellCenterIconExploded,
+  CellPhoneIconGood, CellPhoneIconPoor, CellPhoneIconWorst, CellPhoneIcon, CellCenterIconFull,
+  CellCenterIcon as CellCenterIconExploded,
 } from './marker-icon';
 import $ from './map.module.scss';
 
 const rangeFactor = 11111.1;
 const log = pino();
 const stateLevel = (process.env.NEXT_PUBLIC_UE_STATELEVEL || '-106,-116,-126,-156').split(',').map((x) => Number.parseFloat(x));
-const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '0.95,0.75,0.0').split(',').map((x) => Number.parseFloat(x));
+const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '1.,0.95,0.75,0.0').split(',').map((x) => Number.parseFloat(x));
 
 const wannaPinUETooltip = process.env.NEXT_PUBLIC_ALWAYS_SHOW_UE_TOOLTIP === 'true';
 const wannaDispSINRCQI = process.env.NEXT_PUBLIC_SHOW_SINR_CQI === 'true';
@@ -134,8 +135,10 @@ const Map = function Map() {
           if (cr.load > loadLevel[0]) {
             icon = CellCenterIconExploded;
           } else if (cr.load > loadLevel[1]) {
-            icon = CellCenterIconDanger;
+            icon = CellCenterIconFull;
           } else if (cr.load > loadLevel[2]) {
+            icon = CellCenterIconDanger;
+          } else if (cr.load > loadLevel[3]) {
             icon = CellCenterIconWarning;
           }
 
@@ -283,7 +286,7 @@ const Map = function Map() {
           }
 
           // RSRP information calculation
-          let currentRSRP = 0;
+          let currentRSRP = -156;
           let isCurrentRSRPMax = false;
           let highestRSRP = -20000;
           let highestNCGI = '0';

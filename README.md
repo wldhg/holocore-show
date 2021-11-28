@@ -41,8 +41,10 @@ You can configure below environment variables to this program.
 - `NEXT_PUBLIC_API_ENDPOINT` : Roadshow endpoint. (ex: `127.0.0.1:3324`)
 - `NEXT_PUBLIC_API_TYPE` : RAN connection type. (`SDRAN` (default) or `RAN2`) \
     <sup>Note: currrently only SDRAN is supported.</sup>
-- `NEXT_PUBLIC_UE_STATELEVEL` : UE state coloring criteria in dBm. (ex/default: `"-106,-116,-126,-156"`)
-- `NEXT_PUBLIC_CELL_LOADLEVEL` : Cell load coloring criteria. (ex/default: `"0.95,0.75,0.0"`)
+- `NEXT_PUBLIC_UE_STATELEVEL` : UE state coloring criteria in dBm of 4. (ex/default: `"-106,-116,-126,-156"`)
+    🎨 very good : blue // good : green // not bad : yellow // bad : red
+- `NEXT_PUBLIC_CELL_LOADLEVEL` : Cell load coloring criteria of 4. (ex/default: `"1.,0.95,0.75,0.0"`)
+    🎨 exploded : pink // full : red // high load : orange // load exists : yellow // no load : green
 - `NEXT_PUBLIC_ALWAYS_SHOW_UE_TOOLTIP` : Do you want to see UE tooltip always? (`true` or `false`(default))
 - `NEXT_PUBLIC_SHOW_SINR_CQI` : Set this `true` if you want to see simulated SINR/CQI value (`true` or `false`(default))
 - `NEXT_PUBLIC_SHOW_RAW_NCGI` : Shows raw NCGI instead of simple name. (`true` or `false`(default))
