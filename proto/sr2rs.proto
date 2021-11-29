@@ -3,54 +3,54 @@ syntax = "proto3";
 // SDRAN-to-ROADSHOW gRPC specification version 1.5.0
 
 service SRRSTelecomSpec {
-	rpc Subscribe(StatReq) returns (StatReport) {}
+  rpc Subscribe(StatReq) returns (StatReport) {}
 }
 
 enum CellType {
-	CELL_UNKNOWN = 0;
-	CELL_MACRO = 1;
-	CELL_MICRO = 2;
-	CELL_PICO = 3;
-	CELL_FEMTO = 4;
+  CELL_UNKNOWN = 0;
+  CELL_MACRO = 1;
+  CELL_MICRO = 2;
+  CELL_PICO = 3;
+  CELL_FEMTO = 4;
 }
 
 message StatReq {}
 
 message CellStatReport {
-	uint64 NCGI = 1;
-	double load = 2;
+  uint64 NCGI = 1;
+  double load = 2;
   double longitude = 3;
   double latitude = 4;
   double tx_powerDB = 5;
-	uint32 EARFCN = 6;
-	CellType cell_type = 7;
+  uint32 EARFCN = 6;
+  CellType cell_type = 7;
   uint64 maxUE_count = 8;
   uint64 currentUE_count = 9;
 }
 
 message UECellStatReport {
-	uint64 NCGI = 1;
-	double RSRP = 2;
+  uint64 NCGI = 1;
+  double RSRP = 2;
 }
 
 message UEStatReport {
-	uint64 IMSI = 1;
-	uint64 associatedNCGI = 2;
+  uint64 IMSI = 1;
+  uint64 associatedNCGI = 2;
   double longitude = 3;
   double latitude = 4;
-	repeated UECellStatReport UE_cell_reports = 5;
-	bool isRRC_idle = 6;
-	repeated double route_longitudes = 7;
-	repeated double route_latitudes = 8;
-	int64 route_next_point = 9;
-	bool is_route_reversed = 10;
+  repeated UECellStatReport UE_cell_reports = 5;
+  bool isRRC_idle = 6;
+  repeated double route_longitudes = 7;
+  repeated double route_latitudes = 8;
+  int64 route_next_point = 9;
+  bool is_route_reversed = 10;
   double SINR = 11;
   uint64 CQI = 12;
-	double mobility_speed_avg = 13;
-	double mobility_speed_std_dev = 14;
+  double mobility_speed_avg = 13;
+  double mobility_speed_std_dev = 14;
 }
 
 message StatReport {
-	repeated CellStatReport cell_reports = 1;
-	repeated UEStatReport UE_reports = 2;
+  repeated CellStatReport cell_reports = 1;
+  repeated UEStatReport UE_reports = 2;
 }

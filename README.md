@@ -33,6 +33,8 @@ Then browse below pages:
 - `http://localhost:3000/`
 - `http://localhost:3000/dispLatLng?points=36.014230,129.331049!36.014625,129.331828`
 
+Note that the black/white maps are only available in localhost(127.0.0.1) domain.
+
 ### Configuration
 
 You can configure below environment variables to this program.
@@ -46,6 +48,7 @@ You can configure below environment variables to this program.
 - `NEXT_PUBLIC_CELL_LOADLEVEL` : Cell load coloring criteria of 4. (ex/default: `"1.,0.95,0.75,0.0"`)
     🎨 exploded : pink // full : red // high load : orange // load exists : yellow // no load : green
 - `NEXT_PUBLIC_ALWAYS_SHOW_UE_TOOLTIP` : Do you want to see UE tooltip always? (`true` or `false`(default))
+- `NEXT_PUBLIC_USE_ARROWLINE` : Set this `true` or `false` to show or hide arrowline on UE route. (`true` or `false` or `only-end`(default))
 - `NEXT_PUBLIC_SHOW_SINR_CQI` : Set this `true` if you want to see simulated SINR/CQI value (`true` or `false`(default))
 - `NEXT_PUBLIC_SHOW_RAW_NCGI` : Shows raw NCGI instead of simple name. (`true` or `false`(default))
 - `NEXT_PUBLIC_WANNA_FLY` : Do you want to fly? (`true` (default) or `false`)

@@ -32,6 +32,8 @@ const loadLevel = (process.env.NEXT_PUBLIC_CELL_LOADLEVEL || '1.,0.95,0.75,0.0')
 
 const wannaPinUETooltip = process.env.NEXT_PUBLIC_ALWAYS_SHOW_UE_TOOLTIP === 'true';
 const wannaDispSINRCQI = process.env.NEXT_PUBLIC_SHOW_SINR_CQI === 'true';
+const wannaDispArrowline = process.env.NEXT_PUBLIC_USE_ARROWLINE !== 'false';
+const wannaDispAllWaypoint = process.env.NEXT_PUBLIC_USE_ARROWLINE === 'true';
 
 let avabCellLinesDisappearTimeout: number;
 let avabCellTargetUE = null;
@@ -246,17 +248,35 @@ const Map = function Map() {
                 positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
               }
             }
-            utc.push(
-              <PolylineArrow
-                key={`utc-${ur.IMSI}`}
-                positions={positions}
-                color="var(--theme-ui-colors-route)"
-                weight={2}
-                opacity={0.3}
-                smoothFactor={1}
-                arrowheads={{ size: '10px', fill: true, yawn: 45 }}
-              />,
-            );
+            if (wannaDispArrowline) {
+              utc.push(
+                <PolylineArrow
+                  key={`utc-${ur.IMSI}`}
+                  positions={positions}
+                  color="var(--theme-ui-colors-route)"
+                  weight={2}
+                  opacity={0.3}
+                  smoothFactor={1}
+                  arrowheads={{
+                    frequency: wannaDispAllWaypoint ? 'allvertices' : 'endonly',
+                    size: '10px',
+                    fill: true,
+                    yawn: 45,
+                  }}
+                />,
+              );
+            } else {
+              utc.push(
+                <Polyline
+                  key={`utc-${ur.IMSI}`}
+                  positions={positions}
+                  color="var(--theme-ui-colors-route)"
+                  weight={2}
+                  opacity={0.3}
+                  smoothFactor={1}
+                />,
+              );
+            }
           }
 
           // Idle pass

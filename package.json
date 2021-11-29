@@ -1,6 +1,6 @@
 {
   "name": "holocore-show",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "HOLOCORE visual demonstration",
   "main": "pages/index.tsx",
   "repository": "https://github.com/wldh-g/holocore-show",
