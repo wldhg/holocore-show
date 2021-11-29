@@ -602,43 +602,35 @@ const Map = function Map() {
                 maxZoom={25}
               />
             </LayersControl.BaseLayer>
-            <LayersControl.Overlay checked name="UE waypoints and routes">
+            <LayersControl.Overlay checked name="UE Waypoints and Routes">
               <LayerGroup>
                 {ueTargetLines}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="UE association lines">
+            <LayersControl.Overlay checked name="UE Association Lines">
               <LayerGroup>
                 {assocLines}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Highlighted lines">
-              <LayerGroup>
-                {avabCellLines}
-              </LayerGroup>
-              <LayerGroup>
-                {connUELines}
-              </LayerGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Cell ranges">
+            <LayersControl.Overlay checked name="Cell Ranges">
               <LayerGroup>
                 {cellRanges}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Cell centers">
+            <LayersControl.Overlay checked name="Cell Centers">
               <LayerGroup>
                 {cellCenters}
-              </LayerGroup>
-              <LayerGroup>
                 {cellLabels}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="UEs">
+            <LayersControl.Overlay checked name="UE Icons">
               <LayerGroup>
                 {uePositions}
               </LayerGroup>
             </LayersControl.Overlay>
           </LayersControl>
+          {avabCellLines}
+          {connUELines}
         </MapContainer>
       </div>
       <ToastContainer
