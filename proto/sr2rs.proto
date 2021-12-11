@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-// SDRAN-to-ROADSHOW gRPC specification version 2.1.0
+// SDRAN-to-ROADSHOW gRPC specification version 2.2.0
 
 service SRRSTelecomSpec {
   rpc Subscribe(StatReq) returns (StatReport) {}
@@ -16,7 +16,9 @@ enum CellType {
   CELL_FEMTO = 4;
 }
 
-message StatReq {}
+message StatReq {
+  bool enable_routes = 1;
+}
 
 message CellStatReport {
   uint64 NCGI = 1;

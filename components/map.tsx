@@ -34,6 +34,8 @@ const wannaPinUETooltip = process.env.NEXT_PUBLIC_ALWAYS_SHOW_UE_TOOLTIP === 'tr
 const wannaDispSINRCQI = process.env.NEXT_PUBLIC_SHOW_SINR_CQI === 'true';
 const wannaDispArrowline = process.env.NEXT_PUBLIC_USE_ARROWLINE !== 'false';
 const wannaDispAllWaypoint = process.env.NEXT_PUBLIC_USE_ARROWLINE === 'true';
+const wannaShowCellRanges = (process.env.NEXT_PUBLIC_SHOW_CELL_RANGES || 'true') === 'true';
+const wannaShowUERoutes = (process.env.NEXT_PUBLIC_SHOW_UE_ROUTES || 'true') === 'true';
 
 let avabCellLinesDisappearTimeout: number;
 let avabCellTargetUE = null;
@@ -77,7 +79,12 @@ const Map = function Map() {
         return;
       }
 
-      axios.get('/api/sr2rs', { timeout: 5000 }).then((res) => {
+      axios.get('/api/sr2rs', {
+        timeout: 5000,
+        headers: {
+          'Enable-Routes': wannaShowUERoutes ? 'enabled' : 'disabled',
+        },
+      }).then((res) => {
         const report: typeof StatReport = res.data.data;
 
         if (res.data.error != null) {
@@ -218,64 +225,68 @@ const Map = function Map() {
           );
 
           // Cell ranage
-          const range = (10 ** (cr.txPowerDB / 10)) / 1000 * rangeFactor;
-          crc.push(
-            <Circle
-              key={`crc-${cr.NCGI}`}
-              center={[cr.latitude, cr.longitude]}
-              radius={range}
-              pathOptions={{
-                fillColor: '#f00',
-                fillOpacity: 0.05,
-                color: '#f00',
-              }}
-              stroke={false}
-            />,
-          );
+          if (wannaShowCellRanges) {
+            const range = (10 ** (cr.txPowerDB / 10)) / 1000 * rangeFactor;
+            crc.push(
+              <Circle
+                key={`crc-${cr.NCGI}`}
+                center={[cr.latitude, cr.longitude]}
+                radius={range}
+                pathOptions={{
+                  fillColor: '#f00',
+                  fillOpacity: 0.05,
+                  color: '#f00',
+                }}
+                stroke={false}
+              />,
+            );
+          }
         });
 
         report.UEReports.forEach((ur) => {
           // Route line
-          const nextPoint = Number.parseInt(ur.routeNextPoint, 10);
-          if (nextPoint >= 0 && ur.routeLatitudes.length > 0) {
-            const positions: LatLngExpression[] = [[ur.latitude, ur.longitude]];
-            if (ur.isRouteReversed) {
-              for (let i = nextPoint; i >= 0; i -= 1) {
-                positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+          if (wannaShowUERoutes) {
+            const nextPoint = Number.parseInt(ur.routeNextPoint, 10);
+            if (nextPoint >= 0 && ur.routeLatitudes.length > 0) {
+              const positions: LatLngExpression[] = [[ur.latitude, ur.longitude]];
+              if (ur.isRouteReversed) {
+                for (let i = nextPoint; i >= 0; i -= 1) {
+                  positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+                }
+              } else {
+                for (let i = nextPoint; i < ur.routeLatitudes.length; i += 1) {
+                  positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+                }
               }
-            } else {
-              for (let i = nextPoint; i < ur.routeLatitudes.length; i += 1) {
-                positions.push([ur.routeLatitudes[i], ur.routeLongitudes[i]]);
+              if (wannaDispArrowline) {
+                utc.push(
+                  <PolylineArrow
+                    key={`utc-${ur.IMSI}`}
+                    positions={positions}
+                    color="var(--theme-ui-colors-route)"
+                    weight={2}
+                    opacity={0.3}
+                    smoothFactor={1}
+                    arrowheads={{
+                      frequency: wannaDispAllWaypoint ? 'allvertices' : 'endonly',
+                      size: '10px',
+                      fill: true,
+                      yawn: 45,
+                    }}
+                  />,
+                );
+              } else {
+                utc.push(
+                  <Polyline
+                    key={`utc-${ur.IMSI}`}
+                    positions={positions}
+                    color="var(--theme-ui-colors-route)"
+                    weight={2}
+                    opacity={0.3}
+                    smoothFactor={1}
+                  />,
+                );
               }
-            }
-            if (wannaDispArrowline) {
-              utc.push(
-                <PolylineArrow
-                  key={`utc-${ur.IMSI}`}
-                  positions={positions}
-                  color="var(--theme-ui-colors-route)"
-                  weight={2}
-                  opacity={0.3}
-                  smoothFactor={1}
-                  arrowheads={{
-                    frequency: wannaDispAllWaypoint ? 'allvertices' : 'endonly',
-                    size: '10px',
-                    fill: true,
-                    yawn: 45,
-                  }}
-                />,
-              );
-            } else {
-              utc.push(
-                <Polyline
-                  key={`utc-${ur.IMSI}`}
-                  positions={positions}
-                  color="var(--theme-ui-colors-route)"
-                  weight={2}
-                  opacity={0.3}
-                  smoothFactor={1}
-                />,
-              );
             }
           }
 
@@ -602,21 +613,29 @@ const Map = function Map() {
                 maxZoom={25}
               />
             </LayersControl.BaseLayer>
-            <LayersControl.Overlay checked name="UE Waypoints and Routes">
-              <LayerGroup>
-                {ueTargetLines}
-              </LayerGroup>
-            </LayersControl.Overlay>
+            {
+              wannaShowUERoutes && (
+                <LayersControl.Overlay checked name="UE Waypoints and Routes">
+                  <LayerGroup>
+                    {ueTargetLines}
+                  </LayerGroup>
+                </LayersControl.Overlay>
+              )
+            }
             <LayersControl.Overlay checked name="UE Association Lines">
               <LayerGroup>
                 {assocLines}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Cell Ranges">
-              <LayerGroup>
-                {cellRanges}
-              </LayerGroup>
-            </LayersControl.Overlay>
+            {
+              wannaShowCellRanges && (
+                <LayersControl.Overlay checked name="Cell Ranges">
+                  <LayerGroup>
+                    {cellRanges}
+                  </LayerGroup>
+                </LayersControl.Overlay>
+              )
+            }
             <LayersControl.Overlay checked name="Cell Centers">
               <LayerGroup>
                 {cellCenters}

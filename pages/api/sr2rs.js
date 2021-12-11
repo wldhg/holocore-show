@@ -71,7 +71,9 @@ const api = (I, O) => {
       ));
       resolve();
     }, 3000);
-    client.subscribe({}, (err, response) => {
+    client.Subscribe({
+      enableRoutes: I.headers['enable-routes'] === 'enabled',
+    }, (err, response) => {
       if (!timedOut) {
         clearTimeout(timer);
         O.end(JSON.stringify(
