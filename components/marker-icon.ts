@@ -1,34 +1,69 @@
 import { Icon } from 'leaflet';
 
-export const CellCenterIcon = new Icon({
-  iconUrl: './markers/cell_center.svg',
-  iconSize: [12, 72],
-  iconAnchor: [6, 72],
-});
+export const CellCenterIcon = [
+  new Icon({
+    iconUrl: './markers/cell_center.svg',
+    iconSize: [9, 54],
+    iconAnchor: [4.5, 54],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_center_macro.svg',
+    iconSize: [16, 96],
+    iconAnchor: [8, 96],
+  }),
+];
 
-export const CellCenterIconNormal = new Icon({
-  iconUrl: './markers/cell_center_lime.svg',
-  iconSize: [12, 72],
-  iconAnchor: [6, 72],
-});
+export const CellCenterIconNormal = [
+  new Icon({
+    iconUrl: './markers/cell_center_lime.svg',
+    iconSize: [9, 54],
+    iconAnchor: [4.5, 54],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_center_macro_lime.svg',
+    iconSize: [16, 96],
+    iconAnchor: [8, 96],
+  }),
+];
 
-export const CellCenterIconWarning = new Icon({
-  iconUrl: './markers/cell_center_yellow.svg',
-  iconSize: [12, 72],
-  iconAnchor: [6, 72],
-});
+export const CellCenterIconWarning = [
+  new Icon({
+    iconUrl: './markers/cell_center_yellow.svg',
+    iconSize: [9, 54],
+    iconAnchor: [4.5, 54],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_center_macro_yellow.svg',
+    iconSize: [16, 96],
+    iconAnchor: [8, 96],
+  }),
+];
 
-export const CellCenterIconDanger = new Icon({
-  iconUrl: './markers/cell_center_orange.svg',
-  iconSize: [12, 72],
-  iconAnchor: [6, 72],
-});
+export const CellCenterIconDanger = [
+  new Icon({
+    iconUrl: './markers/cell_center_orange.svg',
+    iconSize: [9, 54],
+    iconAnchor: [4.5, 54],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_center_macro_orange.svg',
+    iconSize: [16, 96],
+    iconAnchor: [8, 96],
+  }),
+];
 
-export const CellCenterIconFull = new Icon({
-  iconUrl: './markers/cell_center_red.svg',
-  iconSize: [12, 72],
-  iconAnchor: [6, 72],
-});
+export const CellCenterIconFull = [
+  new Icon({
+    iconUrl: './markers/cell_center_red.svg',
+    iconSize: [9, 54],
+    iconAnchor: [4.5, 54],
+  }),
+  new Icon({
+    iconUrl: './markers/cell_center_macro_red.svg',
+    iconSize: [16, 96],
+    iconAnchor: [8, 96],
+  }),
+];
 
 export const CellPhoneIcon = new Icon({
   iconUrl: './markers/cell_phone.svg',

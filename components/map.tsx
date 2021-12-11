@@ -133,15 +133,15 @@ const Map = function Map() {
           }
 
           // Cell icon selection
-          let icon = CellCenterIconNormal;
+          let icon = CellCenterIconNormal[cr.cellType === 'CELL_FEMTO' ? 0 : 1];
           if (cr.load > loadLevel[0]) {
-            icon = CellCenterIconExploded;
+            icon = CellCenterIconExploded[cr.cellType === 'CELL_FEMTO' ? 0 : 1];
           } else if (cr.load > loadLevel[1]) {
-            icon = CellCenterIconFull;
+            icon = CellCenterIconFull[cr.cellType === 'CELL_FEMTO' ? 0 : 1];
           } else if (cr.load > loadLevel[2]) {
-            icon = CellCenterIconDanger;
+            icon = CellCenterIconDanger[cr.cellType === 'CELL_FEMTO' ? 0 : 1];
           } else if (cr.load > loadLevel[3]) {
-            icon = CellCenterIconWarning;
+            icon = CellCenterIconWarning[cr.cellType === 'CELL_FEMTO' ? 0 : 1];
           }
 
           // Cell center

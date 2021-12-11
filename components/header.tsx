@@ -92,7 +92,13 @@ const Header = function Header(props: Props) {
             onClick={chLogic}
             hidden={holoBtnStr === ''}
           >
-            {`Change to ${holoBtnStr} mode`}
+            <span className={$.weak}>Change HO Logic To</span>
+            &nbsp;
+            <b>
+              {holoBtnStr}
+            </b>
+            &nbsp;
+            <span className={$.weak}>Mode</span>
           </Button>
           <Button
             className={$.themebutton}

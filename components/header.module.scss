@@ -53,6 +53,10 @@
       transition: opacity .3s;
       cursor: pointer;
 
+      .weak {
+        opacity: .8;
+      }
+
       &:hover {
         opacity: 1;
       }
