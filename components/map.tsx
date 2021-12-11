@@ -416,7 +416,7 @@ const Map = function Map() {
                       <span>
                         {ur.CQI}
                         &nbsp;(
-                        {ur.SINR.toFixed(4)}
+                        {ur.SINR?.toFixed(4)}
                         )
                       </span>
                     </>

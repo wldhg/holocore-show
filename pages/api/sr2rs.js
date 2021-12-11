@@ -39,6 +39,23 @@ const api = (I, O) => {
   ) {
     initClient();
   }
+  if (I.headers['other-command'] && I.headers['other-command'] === 'chlogic') {
+    const newLogic = I.headers['other-command-arg'] || 'local';
+    client.ChangeHOLogic({
+      newLogic,
+    }, (err, res) => {});
+  }
+  if (I.headers['other-command'] && I.headers['other-command'] === 'getlogic') {
+    return new Promise((resolve, _) => {
+      client.CurrentHOLogic({}, (err, res) => {
+        resolve();
+        O.end(JSON.stringify({
+          error: err,
+          data: res,
+        }));
+      });
+    });
+  }
   return new Promise((resolve, _) => {
     let timedOut = false;
     const timer = setTimeout(() => {

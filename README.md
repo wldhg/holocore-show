@@ -52,6 +52,7 @@ You can configure below environment variables to this program.
 - `NEXT_PUBLIC_SHOW_SINR_CQI` : Set this `true` if you want to see simulated SINR/CQI value (`true` or `false`(default))
 - `NEXT_PUBLIC_SHOW_RAW_NCGI` : Shows raw NCGI instead of simple name. (`true` or `false`(default))
 - `NEXT_PUBLIC_WANNA_FLY` : Do you want to fly? (`true` (default) or `false`)
+- `NEXT_PUBLIC_HO_LOGICS` : HO logic strings to be used (ex/default: `local,holocore`)
 
 Example environment files can be found on [`.env.example`](/.env.example).
 

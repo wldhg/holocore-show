@@ -1,9 +1,11 @@
 syntax = "proto3";
 
-// SDRAN-to-ROADSHOW gRPC specification version 1.5.0
+// SDRAN-to-ROADSHOW gRPC specification version 2.1.0
 
 service SRRSTelecomSpec {
   rpc Subscribe(StatReq) returns (StatReport) {}
+  rpc CurrentHOLogic(StatReq) returns (HOLogicReport) {}
+  rpc ChangeHOLogic(HOLogicChangeReq) returns (HOLogicChangeRes) {}
 }
 
 enum CellType {
@@ -54,3 +56,13 @@ message StatReport {
   repeated CellStatReport cell_reports = 1;
   repeated UEStatReport UE_reports = 2;
 }
+
+message HOLogicChangeReq {
+  string new_logic = 1;
+}
+
+message HOLogicReport {
+  string current_logic = 1;
+}
+
+message HOLogicChangeRes {}
