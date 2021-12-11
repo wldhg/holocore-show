@@ -10,6 +10,7 @@ import p from '../package.json';
 
 type Props = {
   subtitle?: string;
+  hideAPIInteraction: boolean;
 };
 
 const logics = (process.env.NEXT_PUBLIC_HO_LOGICS || 'local,holocore').split(',');
@@ -17,7 +18,7 @@ const logics = (process.env.NEXT_PUBLIC_HO_LOGICS || 'local,holocore').split(','
 const Header = function Header(props: Props) {
   const [colorMode, setColorMode] = useColorMode();
   const [holoBtnStr, setHoloBtnStr] = useState('');
-  const { subtitle } = props;
+  const { subtitle, hideAPIInteraction } = props;
 
   const nextColorModeText = colorMode === 'dark' ? 'Light' : 'Dark';
   const nextColorMode = colorMode === 'dark' ? 'light' : 'dark';
@@ -83,33 +84,39 @@ const Header = function Header(props: Props) {
           </Text>
         </div>
         <div className={$.controlbox}>
-          <Button
-            className={$.themebutton}
-            sx={{
-              bg: nextColorBgColor,
-              color: nextColorFgColor,
-            }}
-            onClick={chLogic}
-            hidden={holoBtnStr === ''}
-          >
-            <span className={$.weak}>Change HO Logic To</span>
-            &nbsp;
-            <b>
-              {holoBtnStr}
-            </b>
-            &nbsp;
-            <span className={$.weak}>Mode</span>
-          </Button>
-          <Button
-            className={$.themebutton}
-            sx={{
-              bg: nextColorBgColor,
-              color: nextColorFgColor,
-            }}
-            onClick={sendReconnect}
-          >
-            Reconnect API
-          </Button>
+          {
+            !hideAPIInteraction && (
+              <>
+                <Button
+                  className={$.themebutton}
+                  sx={{
+                    bg: nextColorBgColor,
+                    color: nextColorFgColor,
+                  }}
+                  onClick={chLogic}
+                  hidden={holoBtnStr === ''}
+                >
+                  <span className={$.weak}>Change HO Logic To</span>
+                  &nbsp;
+                  <b>
+                    {holoBtnStr}
+                  </b>
+                  &nbsp;
+                  <span className={$.weak}>Mode</span>
+                </Button>
+                <Button
+                  className={$.themebutton}
+                  sx={{
+                    bg: nextColorBgColor,
+                    color: nextColorFgColor,
+                  }}
+                  onClick={sendReconnect}
+                >
+                  Reconnect API
+                </Button>
+              </>
+            )
+          }
           <Button
             className={$.themebutton}
             sx={{

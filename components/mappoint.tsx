@@ -45,7 +45,7 @@ const Map = function Map() {
           return;
         }
         const [lat, lng] = tp.split(',').map((x) => Number.parseFloat(x.trim()));
-        markers.push(<Marker key={`cell-${lat}-${lng}`} icon={CellCenterIconNormal} position={[lat, lng]} />);
+        markers.push(<Marker key={`cell-${lat}-${lng}`} icon={CellCenterIconNormal[1]} position={[lat, lng]} />);
         latSum += lat;
         lngSum += lng;
         validPoints += 1;

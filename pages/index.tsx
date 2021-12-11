@@ -11,7 +11,7 @@ const App = function App() {
 
   return (
     <Wrapper>
-      <Header />
+      <Header hideAPIInteraction={false} />
       <Map />
     </Wrapper>
   );

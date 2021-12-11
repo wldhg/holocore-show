@@ -11,7 +11,7 @@ const App = function App() {
 
   return (
     <Wrapper>
-      <Header subtitle="Lat/Lng Display Tool" />
+      <Header hideAPIInteraction subtitle="Lat/Lng Display Tool" />
       <Map />
     </Wrapper>
   );
